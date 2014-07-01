@@ -11,7 +11,7 @@
                 var Sock = null;
 
                 function connect() {
-                    Sock = new SockJS('http://127.0.0.1:4001');
+                    Sock = new SockJS('http://107.170.134.161:4001');
 
                     Sock.onopen = function() {
                         console.log('Opened sock!');
@@ -55,6 +55,8 @@
                 connect();
 
                 $( "form" ).submit(function(event) {
+                    event.preventDefault();
+
                     event.preventDefault();
 
                     var username = $( "#username" ).val();
@@ -119,7 +121,6 @@
                         $( "#status").html(htmlWithNewLines(errors.join("\n")));
                     }
 
-                    event.preventDefault();
 
                     disconnect();
 
