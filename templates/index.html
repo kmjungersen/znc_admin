@@ -8,15 +8,13 @@
         <script>
             $(function() {
 
-                console.log('server started');
-
                 var Sock = null;
 
                 function connect() {
-                    Sock = new SockJS('http://127.0.0.1:4001');
+                    Sock = new SockJS('http://107.170.134.161:4001');
 
                     Sock.onopen = function() {
-                        console.log('opened sock');
+                        console.log('Opened sock!');
                     };
 
                     Sock.onmessage = function(e) {
@@ -41,9 +39,11 @@
                     var htmls = [];
                     var lines = text.split(/\n/);
                     var tmpDiv = jQuery(document.createElement('div'));
+
                     for (var i = 0 ; i < lines.length ; i++) {
                         htmls.push(tmpDiv.text(lines[i]).html());
                     }
+
                     return htmls.join("<br>");
                 }
 
@@ -55,6 +55,9 @@
                 connect();
 
                 $( "form" ).submit(function(event) {
+                    event.preventDefault();
+
+                    event.preventDefault();
 
                     var username = $( "#username" ).val();
                     var password = $( "#pwd1" ).val();
@@ -82,17 +85,20 @@
                     }
 
                     var userCheck = true;
+
                     $.each (usernameArray, function( value ) {
                         if (!(usernameChars.indexOf(usernameArray[value]) >= 0)) {
                             userCheck = false;
                         }
                     });
+
                     if (userCheck === false) {
                         check = false;
                         errors.push("Error: Invalid character(s) in username")
                     }
 
                     var passCheck = true;
+
                     $.each (passwordArray, function( value ) {
                         if (!(passwordChars.indexOf(passwordArray[value]) >= 0)) {
                             passCheck = false;
@@ -104,7 +110,6 @@
                         errors.push("Error: Invalid character(s) in password")
                     }
 
-
                     if (check) {
                         var info = "{ \"username\" : \"" + username + "\" , "
                             + " \"password\" : \"" + password + "\" }";
@@ -112,12 +117,12 @@
                         Sock.send(info);
                         $( "#status").text("");
                     }
-
                     else {
                         $( "#status").html(htmlWithNewLines(errors.join("\n")));
                     }
 
-                    event.preventDefault();
+
+                    disconnect();
 
                 }); //form submission
 
