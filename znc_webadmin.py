@@ -33,7 +33,11 @@ class ZNCServer():
                 if link.url.startswith("adduser?clone=")]
 
     def add_user(self, username, password):
-        """ Add a user """
+        """ Add a user
+         :param username will be used both as the username for ZNC and the
+                         NICK for IRC
+         :param password
+         """
 
         resp = self.br.follow_link(text="Add User")
         # Clean up bad HTML
