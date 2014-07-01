@@ -21,7 +21,7 @@
 
     * Register your nick with Freenode's NickServ. This username will belong reserved for you on the freenode network
 
-        /msg NickServ <password> <email>
+        `/msg NickServ <password> <email>`
 
 ###Alternate Configurations
 
@@ -40,4 +40,4 @@
         * If you've already registered with NickServ, you should use that to log in.
 
     * Other clients (including KIWI):
-            /server 107.170.134.161 +5001 username:password
+        `/server 107.170.134.161 +5001 username:password`
