@@ -9,8 +9,15 @@ with ZNC.
 
 If the username has not been taken already, it will add the new user.
 
-Run script:
-    $ main.py <admin password>
+Due to security issues, and also for the sake of modularity, this script
+has been made so that it can work with any ZNC server.  You can also
+modify the IP address where your ZNC server is running.  See below.
+
+To run the script:
+    $ main.py <admin username> <admin password>
+
+and in a separate terminal window to run the Flask app:
+    $ app.py
 
 """
 
@@ -26,16 +33,28 @@ import sys
 
 
 class TwistedSockJSConnection(Protocol):
-    """TwistedSockJSConnection is a Twisted Protocol server object.
+    """TwistedSockJSConnection is a Twisted protocol server object.
     """
 
     def __init__(self):
+        """We start by taking 2 command line arguments: the admin's
+        username and password.  The URL is customizable, and can be passed
+        with the UN and PWD; otherwise it will default to 107.170.134.161.
+
+        Usage:
+
+            znc_uri = <desired URI for ZNC>
+            self.znc_admin = ZNCServer(admin_username, admin_password, znc_uri)
+
+        """
+
+        admin_username = sys.argv[1]
+        admin_password = sys.argv[2]
+
+        self.znc_admin = ZNCServer(admin_username, admin_password)
+
         self.message = ''
         self.status = False
-
-        admin_password = sys.argv[1]
-
-        self.znc_admin = ZNCServer(admin_password)
 
     def connectionMade(self):
         """The function that is called when a SockJS connection is made
@@ -139,5 +158,7 @@ if __name__ == '__main__':
     sockjs = SockJSFactory(Factory.forProtocol(TwistedSockJSConnection))
 
     reactor.listenTCP(4001, sockjs)
+
+    #TODO(kmjungersen) - Add SSL support
 
     reactor.run()
