@@ -55,9 +55,14 @@ class ZNCServer():
         resp.set_data(self.br.response().read().replace('datalist', 'select'))
         self.br.set_response(resp)
         self.br.select_form(nr=0)
-
+        self.br.form['network'] = "freenode"
         self.br.form['nick'] = self.br.form['altnick'] = self.br.form['ident'] = self.br.form['realname'] = username
+        self.br.form['servers'] = "holmes.freenode.net 6667"
         self.br.submit()
 
-
-
+        # Add channel
+        self.br.follow_link(url="editnetwork?user=" + username + "&network=freenode")
+        self.br.follow_link(url="addchan?user=" + username + "&network=freenode")
+        self.br.select_form(nr=0)
+        self.br.form['name'] = "#cos"
+        self.br.submit()
