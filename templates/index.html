@@ -5,59 +5,28 @@
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
 
+</head>
+<body>
+    <img src="http://centerforopenscience.org/static/img/icons/cos_wide.png" height="60">
+    <h1>IRC Registration</h1>
+    <form>
+        <div id="status" style="color:red"></div><br>
+
+        <div>Username/Nick:*  <input type="text" name="username" id="username">    (only letters, numbers, dashes and underscores; between 6 and 16 characters)</div><br>
+        <div>Password:**      <input type="password" name="pwd1" id="pwd1">    (only letters and numbers; between 6 and 16 characters)</div><br>
+        <div>Verify Password: <input type="password" name="pwd2"  id="pwd2"></div><br>
+
+        <div><input type="submit" name="submit" value="Submit" id="submit"></div>
+    </form>
+
+
         <script>
             $(function() {
-
-                var Sock = null;
-
-                function connect() {
-                    Sock = new SockJS('http://107.170.134.161:4001');
-
-                    Sock.onopen = function() {
-                        console.log('Opened sock!');
-                    };
-
-                    Sock.onmessage = function(e) {
-                        if (!(e.data.charAt(0) === '{')) {
-                            if (e.data.charAt(0) === 'S') {
-                                alert(e.data);
-                            }
-                            else {
-                                $("#status").text(e.data);
-                            }
-                        }
-                    };
-
-                    Sock.onclose = function() {
-                        console.log('disconnected.');
-                        Sock = null;
-                    };
-
-                }   //connect
-
-                function htmlWithNewLines(text) {
-                    var htmls = [];
-                    var lines = text.split(/\n/);
-                    var tmpDiv = jQuery(document.createElement('div'));
-
-                    for (var i = 0 ; i < lines.length ; i++) {
-                        htmls.push(tmpDiv.text(lines[i]).html());
-                    }
-
-                    return htmls.join("<br>");
-                }
-
-                function disconnect() {
-                    console.log('disconnecting....');
-                    Sock.close();
-                }
-
-                connect();
 
                 $( "form" ).submit(function(event) {
                     event.preventDefault();
 
-                    event.preventDefault();
+
 
                     var username = $( "#username" ).val();
                     var password = $( "#pwd1" ).val();
@@ -113,35 +82,23 @@
                     if (check) {
                         var info = "{ \"username\" : \"" + username + "\" , "
                             + " \"password\" : \"" + password + "\" }";
+                        var sock =  new SockJS('http://127.0.0.1:4001');
 
-                        Sock.send(info);
-                        $( "#status").text("");
+                        sock.onopen = function() {
+                            sock.send(info);
+                            $( "#status").text("");
+                            sock.close();
+                        }
                     }
                     else {
-                        $( "#status").html(htmlWithNewLines(errors.join("\n")));
+                        $( "#status").html(errors.join("</br>"));
                     }
-
-
-                    disconnect();
 
                 }); //form submission
 
             }); //on page load
 
         </script>
-</head>
-<body>
-    <img src="http://centerforopenscience.org/static/img/icons/cos_wide.png" height="60">
-    <h1>IRC Registration</h1>
-    <form>
-        <div id="status" style="color:red"></div><br>
-
-        <div>Username/Nick:*  <input type="text" name="username" id="username">    (only letters, numbers, dashes and underscores; between 6 and 16 characters)</div><br>
-        <div>Password:**      <input type="password" name="pwd1" id="pwd1">    (only letters and numbers; between 6 and 16 characters)</div><br>
-        <div>Verify Password: <input type="password" name="pwd2"  id="pwd2"></div><br>
-
-        <div><input type="submit" name="submit" value="Submit" id="submit"></div>
-    </form>
 
     <p style="color:grey">* use a name that will be recognizable to others<br>** passwords may not be entirely secure</p>
 </body>
