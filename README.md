@@ -6,12 +6,12 @@
     1. add self.
     1. using webadmin
 
-1. Add default channel
-1. indextwisted or register.mako?
-1. Do we need mako for anything?
-1. Move print statements to log statements
 1. move to Droplet
-1. move js (template) to seperate file?
 1. put twisted server in different dir?
 1. kiwi on droplet
 1. validation (look at IRC and ZNC reqs)
+1. change znc-admin password
+
+## Uglyness to clean up (not today)
+
+1. js to seperate file
