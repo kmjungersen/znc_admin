@@ -13,10 +13,6 @@ app = flask.Flask(__name__)
 
 
 @app.route('/')
-def home():
-    return '<a href="/register">Register</a>'
-
-
 @app.route('/register')
 def register():
 
