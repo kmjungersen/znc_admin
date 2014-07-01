@@ -9,6 +9,7 @@ class ZNCServer():
         """ Initialize a mechanize Browser object and login as an admin """
 
         # Create a mechanize Browser ob
+        #TODO(asmacdo) specific factory required?
         self.br = mechanize.Browser(factory=mechanize.RobustFactory())
 
         # Ignore the robots.txt file
@@ -17,6 +18,7 @@ class ZNCServer():
         # Login to the webadmin
         self.br.open(uri)
         self.br.select_form(nr=0)
+        #TODO(asmacdo) move user to args
         self.br.form['user'] = 'znc-admin'
         self.br.form['pass'] = admin_password
         self.br.submit()
@@ -35,12 +37,11 @@ class ZNCServer():
         """ Add a user """
 
         resp = self.br.follow_link(text="Add User")
-
-        # Clean HTML
+        # Clean up bad HTML
         resp.set_data(self.br.response().read().replace('datalist', 'select'))
         self.br.set_response(resp)
 
-        # Create User
+        # User info
         self.br.select_form(nr=0)
         self.br.form['user'] = self.br.form['nick'] = self.br.form['altnick'] = self.br.form['ident'] = self.br.form['realname'] = username
         self.br.form['password'] = self.br.form['password2'] = password
@@ -51,8 +52,6 @@ class ZNCServer():
         self.br.follow_link(text="List Users")
         self.br.follow_link(url="edituser?user=" + username)
         resp = self.br.follow_link(url="addnetwork?user=" + username)
-
-        # Clean HTML
         resp.set_data(self.br.response().read().replace('datalist', 'select'))
         self.br.set_response(resp)
         self.br.select_form(nr=0)
