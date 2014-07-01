@@ -8,6 +8,10 @@ take the user information sent to it, and then validate the username
 with ZNC.
 
 If the username has not been taken already, it will add the new user.
+
+Run script:
+    $ main.py <admin password>
+
 """
 
 import ast
@@ -18,6 +22,7 @@ from txsockjs.factory import SockJSFactory
 from txsockjs.utils import broadcast
 
 from znc_webadmin import ZNCServer
+import sys
 
 
 class TwistedSockJSConnection(Protocol):
@@ -28,7 +33,9 @@ class TwistedSockJSConnection(Protocol):
         self.message = ''
         self.status = False
 
-        self.znc_admin = ZNCServer()
+        admin_password = sys.argv[1]
+
+        self.znc_admin = ZNCServer(admin_password)
 
     def connectionMade(self):
         """The function that is called when a SockJS connection is made
@@ -122,9 +129,7 @@ class TwistedSockJSConnection(Protocol):
 
         if self.status:
 
-            print 'username: ' + username + '\npassword: ' + password
-
-            # self.znc_admin.add_user(username, password)
+            self.znc_admin.add_user(username, password)
 
         broadcast(self.message, self.factory.transports)
 
