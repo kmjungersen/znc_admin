@@ -1,27 +1,14 @@
-import flask
-from mako.template import Template
-from mako.lookup import TemplateLookup
+from flask import Flask
+from flask import render_template
 
-mako_lookup = TemplateLookup(directories=['templates'])
-
-
-def render(tpl, **kwargs):
-    return mako_lookup.get_template(tpl).render(**kwargs)
-
-
-app = flask.Flask(__name__)
+app = Flask(__name__)
 
 
 @app.route('/')
-def home():
-    return '<a href="/register">Register</a>'
-
-
 @app.route('/register')
-def register():
+def register(name=None):
 
-    return render('register.mako', title="done")
-
+    return render_template('templates/index.html', name=name)
 
 if __name__ == '__main__':
     app.run(debug=True)
