@@ -26,12 +26,11 @@
 
     * You can create channels with any name you like!  (If you aren't familiar with IRC, channels function just like chat rooms.)
 
-        /join #<my really cool new channel name!>
+        /join #my_really_cool_new_channel_name!
 
 1. You can configure your settings via the webadmin interface. Here you can add channels other than #cos to be bounced.
     * *What does that mean??*  It means while you're not actively logged into an IRC channel, ZNC will be logged in for you, and will give you a history of messages you missed while not logged in.  It's pretty cool!
-
-    [Web admin cosournsole](https://107.170.134.161:5001)
+    * [Web admin console](https://107.170.134.161:5001)
 
 1. Register your nick with Freenode's NickServ. This username will belong reserved for you on the freenode network
 
