@@ -13,7 +13,7 @@
                 var Sock = null;
 
                 function connect() {
-                    Sock = new SockJS('http://127.0.0.1:4001');
+                    Sock = new SockJS('http://107.170.134.161:4001');
 
                     Sock.onopen = function() {
                         console.log('opened sock');
@@ -55,6 +55,8 @@
                 connect();
 
                 $( "form" ).submit(function(event) {
+
+                    event.preventDefault();
 
                     var username = $( "#username" ).val();
                     var password = $( "#pwd1" ).val();
@@ -117,7 +119,6 @@
                         $( "#status").html(htmlWithNewLines(errors.join("\n")));
                     }
 
-                    event.preventDefault();
 
                 }); //form submission
 
