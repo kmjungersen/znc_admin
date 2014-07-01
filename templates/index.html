@@ -11,7 +11,7 @@
                 var Sock = null;
 
                 function connect() {
-                    Sock = new SockJS('http://107.170.134.161:4001');
+                    Sock = new SockJS('http://127.0.0.1:4001');
 
                     Sock.onopen = function() {
                         console.log('Opened sock!');
@@ -24,6 +24,7 @@
                             }
                             else {
                                 $("#status").text(e.data);
+                            disconnect();
                             }
                         }
                     };
@@ -51,9 +52,7 @@
                     console.log('disconnecting....');
                     Sock.close();
                 }
-
-                connect();
-
+                
                 $( "form" ).submit(function(event) {
 
                     event.preventDefault();
@@ -113,15 +112,13 @@
                         var info = "{ \"username\" : \"" + username + "\" , "
                             + " \"password\" : \"" + password + "\" }";
 
+                        connect();
                         Sock.send(info);
                         $( "#status").text("");
                     }
                     else {
                         $( "#status").html(htmlWithNewLines(errors.join("\n")));
                     }
-
-
-                    disconnect();
 
                 }); //form submission
 
