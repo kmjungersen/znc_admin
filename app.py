@@ -8,7 +8,7 @@ app = Flask(__name__)
 @app.route('/register')
 def register(name=None):
 
-    return render_template('templates/index.html', name=name)
+    return render_template("index.html", name=name)
 
 if __name__ == '__main__':
     app.run(debug=True)
