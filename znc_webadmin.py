@@ -5,7 +5,7 @@ URI = "https://107.170.134.161:5001/"
 
 class ZNCServer():
 
-    def __init__(self, admin_password, uri=URI):
+    def __init__(self, username, admin_password, uri=URI):
         """ Initialize a mechanize Browser object and login as an admin """
 
         # Create a mechanize Browser ob
@@ -18,8 +18,7 @@ class ZNCServer():
         # Login to the webadmin
         self.br.open(uri)
         self.br.select_form(nr=0)
-        #TODO(asmacdo) move user to args
-        self.br.form['user'] = 'znc-admin'
+        self.br.form['user'] = username
         self.br.form['pass'] = admin_password
         self.br.submit()
 
@@ -43,7 +42,9 @@ class ZNCServer():
 
         # User info
         self.br.select_form(nr=0)
-        self.br.form['user'] = self.br.form['nick'] = self.br.form['altnick'] = self.br.form['ident'] = self.br.form['realname'] = username
+        self.br.form['user'] = self.br.form['nick'] = username
+        self.br.form['altnick'] = username
+        self.br.form['ident'] = self.br.form['realname'] = username
         self.br.form['password'] = self.br.form['password2'] = password
         self.br.find_control("modargs_webadmin").selected=True
         self.br.submit()
@@ -56,13 +57,16 @@ class ZNCServer():
         self.br.set_response(resp)
         self.br.select_form(nr=0)
         self.br.form['network'] = "freenode"
-        self.br.form['nick'] = self.br.form['altnick'] = self.br.form['ident'] = self.br.form['realname'] = username
+        self.br.form['nick'] = self.br.form['altnick'] = username
+        self.br.form['ident'] = self.br.form['realname'] = username
         self.br.form['servers'] = "holmes.freenode.net 6667"
         self.br.submit()
 
         # Add channel
-        self.br.follow_link(url="editnetwork?user=" + username + "&network=freenode")
-        self.br.follow_link(url="addchan?user=" + username + "&network=freenode")
+        self.br.follow_link(url="editnetwork?user=" +
+                            username + "&network=freenode")
+        self.br.follow_link(url="addchan?user=" + username +
+                            "&network=freenode")
         self.br.select_form(nr=0)
         self.br.form['name'] = "#cos"
         self.br.submit()

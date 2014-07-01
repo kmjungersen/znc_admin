@@ -1,4 +1,3 @@
 Flask==0.10.1
-Mako==1.0.0
 Twisted==14.0.0
 mechanize==0.2.5
