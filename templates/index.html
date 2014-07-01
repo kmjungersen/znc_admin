@@ -55,6 +55,7 @@
                 connect();
 
                 $( "form" ).submit(function(event) {
+                    event.preventDefault();
 
                     var username = $( "#username" ).val();
                     var password = $( "#pwd1" ).val();
