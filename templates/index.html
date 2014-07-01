@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>ZNC Sign Up</title>
+        <title>COS IRC Registration</title>
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
 
@@ -35,6 +35,16 @@
 
                 }   //connect
 
+                function htmlWithNewLines(text) {
+                    var htmls = [];
+                    var lines = text.split(/\n/);
+                    var tmpDiv = jQuery(document.createElement('div'));
+                    for (var i = 0 ; i < lines.length ; i++) {
+                        htmls.push(tmpDiv.text(lines[i]).html());
+                    }
+                    return htmls.join("<br>");
+                }
+
                 function disconnect() {
                     console.log('disconnecting....');
                     Sock.close();
@@ -47,8 +57,53 @@
                     var username = $( "#username" ).val();
                     var password = $( "#pwd1" ).val();
                     var verify_password = $( "#pwd2").val();
+                    var usernameArray = username.split("");
+                    var passwordArray = password.split("");
+                    var passwordChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+                    var usernameChars = passwordChars + "_-";
+                    var check = true;
+                    var errors = [];
 
-                    if (password === verify_password) {
+                    if (!(password === verify_password)) {
+                        check = false;
+                        errors.push("Error: Passwords do not match");
+                    }
+
+                    if ((username.length < 6) || (username.length > 16)) {
+                        check = false;
+                        errors.push("Error: Username length is not within limits");
+                    }
+
+                    if ((password.length < 6) || (password.length > 16)) {
+                        check = false;
+                        errors.push("Error: Password length is not within limits");
+                    }
+
+                    var userCheck = true;
+                    $.each (usernameArray, function( value ) {
+                        if (!(usernameChars.indexOf(usernameArray[value]) >= 0)) {
+                            userCheck = false;
+                        }
+                    });
+                    if (userCheck === false) {
+                        check = false;
+                        errors.push("Error: Invalid character(s) in username")
+                    }
+
+                    var passCheck = true;
+                    $.each (passwordArray, function( value ) {
+                        if (!(passwordChars.indexOf(passwordArray[value]) >= 0)) {
+                            passCheck = false;
+                        }
+                    });
+
+                    if (passCheck === false) {
+                        check = false;
+                        errors.push("Error: Invalid character(s) in password")
+                    }
+
+
+                    if (check) {
                         var info = "{ \"username\" : \"" + username + "\" , "
                             + " \"password\" : \"" + password + "\" }";
 
@@ -57,7 +112,7 @@
                     }
 
                     else {
-                        $( "#status").text("Passwords do not match");
+                        $( "#status").html(htmlWithNewLines(errors.join("\n")));
                     }
 
                     event.preventDefault();
@@ -69,16 +124,18 @@
         </script>
 </head>
 <body>
+    <img src="http://centerforopenscience.org/static/img/icons/cos_wide.png" height="60">
+    <h1>IRC Registration</h1>
     <form>
         <div id="status" style="color:red"></div><br>
 
-        <div>Username: <input type="text" name="username" id="username"></div>
-        <div>Password:* <input type="password" name="pwd1" id="pwd1"></div>
-        <div>Verify Password: <input type="password" name="pwd2"  id="pwd2"></div>
+        <div>Username/Nick:*  <input type="text" name="username" id="username">    (only letters, numbers, dashes and underscores; between 6 and 16 characters)</div><br>
+        <div>Password:**      <input type="password" name="pwd1" id="pwd1">    (only letters and numbers; between 6 and 16 characters)</div><br>
+        <div>Verify Password: <input type="password" name="pwd2"  id="pwd2"></div><br>
 
         <div><input type="submit" name="submit" value="Submit" id="submit"></div>
     </form>
 
-    <p style="color:grey">* passwords may not be entirely secure</p>
+    <p style="color:grey">* use a name that will be recognizable to others<br>** passwords may not be entirely secure</p>
 </body>
 </html>
