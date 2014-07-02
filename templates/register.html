@@ -122,6 +122,8 @@
                                 if (e.data.charAt(0) === 'S') {
                                     alert(e.data);
                                     $("#status").text("");
+                                    //redirect to homepage
+                                    window.location.href = "/";
                                 // On fail
                                 } else { $("#status").text(e.data); }
                             }

@@ -20,13 +20,14 @@ Note: please add to this!
 
 `/join #my_really_cool_new_channel_name`
 
-* We are using ZNC which is a bouncer service. When you create an account, ZNC logs into IRC 
-* What does that mean??*  It means while you're not actively logged into an IRC channel, ZNC will be logged in for you, and will give you a history of messages you missed while not logged in.  It's pretty cool!
-* You can change your bouncer settings here: [Web admin console](https://107.170.134.161:5001)
+* We are using ZNC which is a bouncer service. When you create an account, ZNC logs into IRC. What does that mean??  It means while you're not actively logged into an IRC channel, ZNC will be logged in for you, and will give you a history of messages you missed while not logged in.  It's pretty cool! 
+* You can change your bouncer settings here (including changing your password): [Web admin console](https://107.170.134.161:5001)
 
 * Register your nick with Freenode's NickServ. This username will belong reserved for you on the freenode network
 
-`/msg NickServ <password> <email>`
+`/msg NickServ REGISTER <password> <email>`
+
+* /msg <username> opens a private message with that person. Kiwi also allows you to click a user and chat with them directly. This Essentially opens a new channel that is just a chat between the two of you.
 
 NickServ will send you an email. Follow those instructions to complete the registration.
 
