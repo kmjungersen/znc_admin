@@ -21,8 +21,6 @@ and in a separate terminal window to run the Flask app:
 
 """
 
-import ast
-
 from twisted.internet.protocol import Factory, Protocol
 from twisted.internet import reactor
 from txsockjs.factory import SockJSFactory
@@ -30,6 +28,7 @@ from txsockjs.utils import broadcast
 
 from znc_webadmin import ZNCServer
 import sys
+import ast
 
 
 class TwistedSockJSConnection(Protocol):
@@ -63,9 +62,13 @@ class TwistedSockJSConnection(Protocol):
         will add it before continuing.
         """
 
+        print 'Connection Opened!'
+
         if not hasattr(self.factory, "transports"):
             self.factory.transports = set()
         self.factory.transports.add(self.transport)
+
+
 
     def dataReceived(self, data):
         """The function that is called when data is received on the connection
@@ -78,7 +81,8 @@ class TwistedSockJSConnection(Protocol):
     def connectionLost(self, reason=''):
         """The function that is called when something severs the connection
         """
-        print 'connection lost...'
+
+        print 'Connection lost...'
 
     def parse_user_info(self, info):
         """This function will take the data passed over the SockJS connection
@@ -125,6 +129,8 @@ class TwistedSockJSConnection(Protocol):
 
         else:
 
+            print 'A user has been successfully added!'
+
             message = 'Success!!! You are now registered.'
             return True, message
 
@@ -148,7 +154,8 @@ class TwistedSockJSConnection(Protocol):
 
         if self.status:
 
-            self.znc_admin.add_user(username, password)
+            print 'Adding user: ' + username
+            #self.znc_admin.add_user(username, password)
 
         broadcast(self.message, self.factory.transports)
 
