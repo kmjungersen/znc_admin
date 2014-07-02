@@ -32,8 +32,12 @@
     <form>
         <div id="status" style="color:red; margin-bottom:18px;"></div>
 
-        <div>Username/Nick:*  <input class="field" type="text" name="username" id="username" value=""></div><div class="note">(only letters, numbers, dashes and underscores; between 6 and 16 characters)</div>
-        <div>Password:**      <input class="field" type="password" name="pwd1" id="pwd1" value=""></div><div class="note">(only letters and numbers; between 6 and 16 characters)</div>
+        <div>Username/Nick:* <input class="field" type="text" name="username" id="username" value=""></div>
+        <div class="note">(only letters, numbers, dashes and underscores; between 6 and 16 characters)</div>
+
+        <div>Password:** <input class="field" type="password" name="pwd1" id="pwd1" value=""></div>
+        <div class="note">(only letters and numbers; greater than 6 characters)</div>
+
         <div>Verify Password: <input class="field" type="password" name="pwd2"  id="pwd2" value=""></div>
 
         <div style="margin-top: 14px"><input type="submit" name="submit" value="Submit" id="submit"></div>
@@ -82,7 +86,7 @@
                         errors.push("Error: Username length is not within limits");
                     }
 
-                    if ((password.length < 6) || (password.length > 16)) {
+                    if (password.length < 6) {
 
                         check = false;
                         errors.push("Error: Password length is not within limits");
