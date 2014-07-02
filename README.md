@@ -28,6 +28,8 @@ Note: please add to this!
 
 `/msg NickServ <password> <email>`
 
+* /msg <username> opens a private message with that person. Kiwi also allows you to click a user and chat with them directly. This Essentially opens a new channel that is just a chat between the two of you.
+
 NickServ will send you an email. Follow those instructions to complete the registration.
 
 * If you join or leave a channel in Kiwi, ZNC will also join or leave. If you want ZNC to stay and listen while you are away, simply close your browser tab or logout without leaving the rooms.
