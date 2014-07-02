@@ -6,6 +6,23 @@
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
 
+        <style>
+
+            input.field {
+                position: fixed;
+                left: 130px;
+            }
+
+            .note {
+                color: grey;
+                font-size: 0.9em;
+                position: relative;
+                bottom: 14px;
+                left: 250px;
+            }
+
+        </style>
+
     </head>
 
 <body>
@@ -15,11 +32,11 @@
     <form>
         <div id="status" style="color:red; margin-bottom:18px;"></div>
 
-        <div style="margin-bottom:18px;">Username/Nick:*  <input type="text" name="username" id="username" value="">    (only letters, numbers, dashes and underscores; between 6 and 16 characters)</div>
-        <div style="margin-bottom:18px;">Password:**      <input type="password" name="pwd1" id="pwd1" value="">    (only letters and numbers; between 6 and 16 characters)</div>
-        <div style="margin-bottom:18px;">Verify Password: <input type="password" name="pwd2"  id="pwd2" value=""></div>
+        <div>Username/Nick:*  <input class="field" type="text" name="username" id="username" value=""></div><div class="note">(only letters, numbers, dashes and underscores; between 6 and 16 characters)</div>
+        <div>Password:**      <input class="field" type="password" name="pwd1" id="pwd1" value=""></div><div class="note">(only letters and numbers; between 6 and 16 characters)</div>
+        <div>Verify Password: <input class="field" type="password" name="pwd2"  id="pwd2" value=""></div>
 
-        <div><input type="submit" name="submit" value="Submit" id="submit"></div>
+        <div style="margin-top: 14px"><input type="submit" name="submit" value="Submit" id="submit"></div>
     </form>
 
     <p style="color:grey">* use a name that will be recognizable to others<br>** passwords may not be entirely secure</p>
