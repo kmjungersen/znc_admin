@@ -1,34 +1,42 @@
 ### Registering with the COS IRC Network
+For future reference, all of the links to these services are [here](http://107.170.134.161:5000/).
 
-1. Register a username [here](http://107.170.134.161:5000)
-    * Note: This username should ideally be registered (or available to register) with the NickServ on IRC.  This is how your name will be displayed, so **make it something logical!!!**
+1. Register a username [here](http://107.170.134.161:5000/register)
+    * Note: This username should ideally be registered (or available to register) with the NickServ on IRC.  This is how your name will be displayed, so **make it something logical!!!** Some clients, including Kiwi are capable of logging you into NicServ as well if you make this the same password.
 
-2. Log in [here](http://107.170.134.161:7778/), using the Nick and password you just registered.
+2. Log into IRC. You can use your favorite client if you would like, but we have a browser based service (Kiwi) running [here](http://107.170.134.161:7778/). Use the Nick and password you just registered. If you would like to user a different client, see below for more details. 
 
-3. Chat away!!!  It's recommended to bookmark these links!
+3. Chat away!!!  It's recommended to bookmark these links and that you review some IRC basics below. 
 
-    * Join channels like so:
 
-        `/join #cos`
+### IRC Basics
+Note: please add to this!
 
-    * You can create channels with any name you like!  (If you aren't familiar with IRC, channels function just like chat rooms.)
+* Join channels like so:
 
-        `/join #my_really_cool_new_channel_name!`
+`/join #cos`
 
-    * You can configure your settings via the webadmin interface. Here you can add channels other than #cos to be bounced.
-        * *What does that mean??*  It means while you're not actively logged into an IRC channel, ZNC will be logged in for you, and will give you a history of messages you missed while not logged in.  It's pretty cool!
-        * [Web admin console](https://107.170.134.161:5001)
+* You can create channels with any name you like!  (If you aren't familiar with IRC, channels function just like chat rooms.) Creating a channel is the same syntax as joining:
 
-    * Register your nick with Freenode's NickServ. This username will belong reserved for you on the freenode network
+`/join #my_really_cool_new_channel_name`
 
-        `/msg NickServ <password> <email>`
+* We are using ZNC which is a bouncer service. When you create an account, ZNC logs into IRC 
+* What does that mean??*  It means while you're not actively logged into an IRC channel, ZNC will be logged in for you, and will give you a history of messages you missed while not logged in.  It's pretty cool!
+* You can change your bouncer settings here: [Web admin console](https://107.170.134.161:5001)
+
+* Register your nick with Freenode's NickServ. This username will belong reserved for you on the freenode network
+
+`/msg NickServ <password> <email>`
+
+NickServ will send you an email. Follow those instructions to complete the registration.
+
+* If you join or leave a channel in Kiwi, ZNC will also join or leave. If you want ZNC to stay and listen while you are away, simply close your browser tab or logout without leaving the rooms.
+        
 
 ###Alternate Configurations
 
-*  Login to IRC using the client of your choice.  Pointing your IRC client to the ZNC bouncer is different based on the client.
+*  Pointing your IRC client to the ZNC bouncer is different based on the client. The basic details you need:
 
-    |Limechat|  |
-    |-------|-------|
     |Network name: | anything you want!|
     |server:| 107.170.134.161|
     |port:| 5001|
@@ -39,5 +47,6 @@
     * Nickserv Password: this only applies if you've registered your Nick with Freenode's NickServ
         * If you've already registered with NickServ, you should use that to log in.
 
-    * Other clients (including KIWI):
+    * Some clients require that you change settings via IRC commands:
         `/server 107.170.134.161 +5001 username:password`
+The server is using SSL. For some clients, this is indicated by the '+'. You may need to add to the command otherwise. 
