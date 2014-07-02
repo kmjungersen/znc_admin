@@ -124,12 +124,12 @@ class TwistedSockJSConnection(Protocol):
 
         if username in self.znc_admin.users:
 
-            message = "ERROR!!!  THIS USERNAME IS ALREADY TAKEN!"
+            message = "This username has already been registered. Please choose another or contact your admin"
             return False, message
 
         else:
 
-            message = 'Success!!! You are now registered.'
+            message = 'Success! You are now registered.'
             return True, message
 
     def add_user(self, data):
