@@ -26,7 +26,7 @@ Note: please add to this!
 
 * Register your nick with Freenode's NickServ. This username will belong reserved for you on the freenode network
 
-`/msg NickServ <password> <email>`
+`/msg NickServ REGISTER <password> <email>`
 
 * /msg <username> opens a private message with that person. Kiwi also allows you to click a user and chat with them directly. This Essentially opens a new channel that is just a chat between the two of you.
 
