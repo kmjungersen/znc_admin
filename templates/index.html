@@ -15,9 +15,9 @@
     <form>
         <div id="status" style="color:red"></div><br>
 
-        <div>Username/Nick:*  <input type="text" name="username" id="username" value="asdflkjhg">    (only letters, numbers, dashes and underscores; between 6 and 16 characters)</div><br>
-        <div>Password:**      <input type="password" name="pwd1" id="pwd1" value="asdflkjhg">    (only letters and numbers; between 6 and 16 characters)</div><br>
-        <div>Verify Password: <input type="password" name="pwd2"  id="pwd2" value="asdflkjhg"></div><br>
+        <div>Username/Nick:*  <input type="text" name="username" id="username" value="">    (only letters, numbers, dashes and underscores; between 6 and 16 characters)</div><br>
+        <div>Password:**      <input type="password" name="pwd1" id="pwd1" value="">    (only letters and numbers; between 6 and 16 characters)</div><br>
+        <div>Verify Password: <input type="password" name="pwd2"  id="pwd2" value=""></div><br>
 
         <div><input type="submit" name="submit" value="Submit" id="submit"></div>
     </form>
@@ -27,7 +27,8 @@
 
                 console.log('Page loaded.');
 
-                var Sock = null;
+                var LOCALHOST = 'http://127.0.0.1:4001'
+                var SERVER =  'http://107.170.134.161:4001'
 
                 $( "form" ).submit(function(event) {
 
@@ -97,47 +98,45 @@
                     if (check) {
 
                         var info = "{ \"username\" : \"" + username + "\" , "
-                            + " \"password\" : \"" + password + "\" }";
+                                + " \"password\" : \"" + password + "\" }";
 
-                    }
-                    else {
+                        var Sock = new SockJS(LOCALHOST);
 
-                        $( "#status").html(errors.join("</br>"));
-                    }
-
-                    function connect() {
-
-                        Sock = new SockJS('http://127.0.0.1:4001');
-
-                        Sock.onopen = function() {
+                        Sock.onopen = function () {
 
                             console.log('Opened sock!');
                             Sock.send(info);
                         };
 
-                        Sock.onmessage = function(e) {
+                        Sock.onmessage = function (e) {
+                            // On incoming messages
                             if (!(e.data.charAt(0) === '{')) {
 
+                                // Message recieved, sock needs to be closed
+                                // ASAP to leave the line open
+                                Sock.close();
+
+                                // On success
                                 if (e.data.charAt(0) === 'S') {
-
                                     alert(e.data);
-
-                                }
-                                else {
-                                    $("#status").text(e.data);
-                                }
+                                    $("#status").text("");
+                                // On fail
+                                } else { $("#status").text(e.data); }
                             }
                         };
 
-                        Sock.onclose = function() {
+                        Sock.onclose = function () {
 
                             console.log('disconnected.');
                             Sock = null;
+
                         };
 
-                    } //connect
+                    }
 
-                    connect();
+                    else {
+                        $( "#status").html(errors.join("</br>"));
+                    }
 
                 }); //form submission
 
