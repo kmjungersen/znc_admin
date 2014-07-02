@@ -129,8 +129,6 @@ class TwistedSockJSConnection(Protocol):
 
         else:
 
-            print 'A user has been successfully added!'
-
             message = 'Success!!! You are now registered.'
             return True, message
 
@@ -154,11 +152,16 @@ class TwistedSockJSConnection(Protocol):
 
         if self.status:
 
-            print 'Adding user: ' + username
-            #self.znc_admin.add_user(username, password)
+            print 'Added a new user!  "' + username + '" is now registered.'
+
+            self.znc_admin.add_user(username, password)
 
         broadcast(self.message, self.factory.transports)
 
+#TODO(kmjungersen, asmacdo) - Add a logging class, to log user creations
+#TODO                         to a file with timestamps, which will be
+#TODO                         particularly important when deploying this
+#TODO                         on the scale of the OSF user base.
 
 if __name__ == '__main__':
 
@@ -166,6 +169,6 @@ if __name__ == '__main__':
 
     reactor.listenTCP(4001, sockjs)
 
-    #TODO(kmjungersen) - Add SSL support
+    #TODO(kmjungersen, asmacdo) - Add SSL support!!!
 
     reactor.run()
