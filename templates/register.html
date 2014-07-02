@@ -29,8 +29,8 @@
 
                 console.log('Page loaded.');
 
-                var LOCALHOST = 'http://127.0.0.1:4001'
-                var SERVER =  'http://107.170.134.161:4001'
+                var LOCALHOST = 'http://127.0.0.1:4001';
+                var SERVER =  'http://107.170.134.161:4001';
 
                 $( "form" ).submit(function(event) {
 
@@ -81,7 +81,7 @@
                     if (userCheck === false) {
 
                         check = false;
-                        errors.push("Error: Invalid character(s) in username")
+                        errors.push("Error: Invalid character(s) in username");
                     }
 
                     $.each (passwordArray, function( value ) {
@@ -94,7 +94,7 @@
                     if (passCheck === false) {
 
                         check = false;
-                        errors.push("Error: Invalid character(s) in password")
+                        errors.push("Error: Invalid character(s) in password");
                     }
 
                     if (check) {
