@@ -6,22 +6,7 @@
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
 
-        <style>
-
-            input.field {
-                position: fixed;
-                left: 130px;
-            }
-
-            .inputReqs {
-                color: grey;
-                font-size: 0.9em;
-                position: relative;
-                bottom: 14px;
-                left: 250px;
-            }
-
-        </style>
+        <link rel="stylesheet" type="text/css" href="/static/styles.css">
 
     </head>
 
@@ -30,7 +15,7 @@
     <h1>IRC Registration</h1>
 
     <form>
-        <div id="status" style="color:red; margin-bottom:18px;"></div>
+        <div id="status" class="errorsList"></div>
 
         <div>Username/Nick:* <input class="field" type="text" name="username" id="username" value=""></div>
         <div class="inputReqs">(only letters, numbers, dashes and underscores; between 6 and 16 characters)</div>
@@ -40,10 +25,13 @@
 
         <div>Verify Password: <input class="field" type="password" name="pwd2"  id="pwd2" value=""></div>
 
-        <div style="margin-top: 14px"><input type="submit" name="submit" value="Submit" id="submit"></div>
+        <div><input class="submitButton" type="submit" name="submit" value="Submit" id="submit"></div>
     </form>
 
-    <p style="color:grey">* use a name that will be recognizable to others<br>** passwords may not be entirely secure</p>
+    <div class="bottomNotes">
+        <p class="singleNote">* use a name that will be recognizable to others</p>
+        <p class="singleNote">** passwords may not be entirely secure</p>
+    </div>
 
         <script>
             $(function() {
