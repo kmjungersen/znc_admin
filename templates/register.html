@@ -6,31 +6,40 @@
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
 
+        <link rel="stylesheet" type="text/css" href="/static/styles.css">
+
     </head>
 
 <body>
-    <a href="/"><img src="http://centerforopenscience.org/static/img/icons/cos_wide.png" height="60"></a>
+    <a href="/"><img src="/static/cos_logo.png" height="60"></a>
     <h1>IRC Registration</h1>
 
     <form>
-        <div id="status" style="color:red; margin-bottom:18px;"></div>
+        <div id="status" class="errorsList"></div>
 
-        <div style="margin-bottom:18px;">Username/Nick:*  <input type="text" name="username" id="username" value="">    (only letters, numbers, dashes and underscores; between 6 and 16 characters)</div>
-        <div style="margin-bottom:18px;">Password:**      <input type="password" name="pwd1" id="pwd1" value="">    (only letters and numbers; between 6 and 16 characters)</div>
-        <div style="margin-bottom:18px;">Verify Password: <input type="password" name="pwd2"  id="pwd2" value=""></div>
+        <div>Username/Nick:* <input class="field" type="text" name="username" id="username" value=""></div>
+        <div class="inputReqs">(only letters, numbers, dashes and underscores; between 6 and 16 characters)</div>
 
-        <div><input type="submit" name="submit" value="Submit" id="submit"></div>
+        <div>Password:** <input class="field" type="password" name="pwd1" id="pwd1" value=""></div>
+        <div class="inputReqs">(only letters and numbers; greater than 6 characters)</div>
+
+        <div>Verify Password: <input class="field" type="password" name="pwd2"  id="pwd2" value=""></div>
+
+        <div><input class="submitButton" type="submit" name="submit" value="Submit" id="submit"></div>
     </form>
 
-    <p style="color:grey">* use a name that will be recognizable to others<br>** passwords may not be entirely secure</p>
+    <div class="bottomNotes">
+        <p class="singleNote">* use a name that will be recognizable to others</p>
+        <p class="singleNote">** passwords may not be entirely secure</p>
+    </div>
 
         <script>
             $(function() {
 
                 console.log('Page loaded.');
 
-                var LOCALHOST = 'http://127.0.0.1:4001'
-                var SERVER =  'http://107.170.134.161:4001'
+                var LOCALHOST = 'http://127.0.0.1:4001';
+                var SERVER =  'http://107.170.134.161:4001';
 
                 $( "form" ).submit(function(event) {
 
@@ -65,7 +74,7 @@
                         errors.push("Error: Username length is not within limits");
                     }
 
-                    if ((password.length < 6) || (password.length > 16)) {
+                    if (password.length < 6) {
 
                         check = false;
                         errors.push("Error: Password length is not within limits");
@@ -81,7 +90,7 @@
                     if (userCheck === false) {
 
                         check = false;
-                        errors.push("Error: Invalid character(s) in username")
+                        errors.push("Error: Invalid character(s) in username");
                     }
 
                     $.each (passwordArray, function( value ) {
@@ -94,7 +103,7 @@
                     if (passCheck === false) {
 
                         check = false;
-                        errors.push("Error: Invalid character(s) in password")
+                        errors.push("Error: Invalid character(s) in password");
                     }
 
                     if (check) {
