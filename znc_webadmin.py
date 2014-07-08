@@ -1,7 +1,7 @@
 import mechanize
 from local import URI, ZNC_WEBADMIN_PORT, ADMIN_USERNAME, ADMIN_PASSWORD
 
-full_uri = 'https://107.170.134.161:5001/'
+full_uri = 'https://'+URI+':'+ZNC_WEBADMIN_PORT+'/'
 
 class ZNCServer():
 

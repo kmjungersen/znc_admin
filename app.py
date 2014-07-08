@@ -14,7 +14,6 @@ def render_mako(tpl, **kwargs):
 
 kiwi_url = 'http://'+URI+':'+KIWI_CLIENT_PORT+'/'
 znc_url = 'https://'+URI+':'+ZNC_WEBADMIN_PORT+'/'
-print kiwi_url
 
 app = Flask(__name__)
 
