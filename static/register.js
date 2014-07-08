@@ -2,8 +2,25 @@ $(function() {
 
     console.log('Page loaded.');
 
-    var LOCALHOST = 'http://127.0.0.1:4001';
-    var SERVER =  'http://107.170.134.161:4001';
+    var SERVER = null;
+    var LOCALHOST = null;
+    var USERNAME_CHARACTERS = null;
+    var PASSWORD_CHARACTERS = null;
+
+    $.ajax({
+        type: "GET",
+        url: "/register/config/",
+        success: function (data) {
+            SERVER =  data.URI+':'+data.REGISTER_PORT;
+            LOCALHOST = 'http://127.0.0.1:'+data.REGISTER_PORT;
+            USERNAME_CHARACTERS = data.USERNAME_CHARACTERS;
+            PASSWORD_CHARACTERS = data.PASSWORD_CHARACTERS;
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log("failed!!!");
+            console.log(jqXHR.status);
+        }
+    });
 
     $( "form" ).submit(function(event) {
 
@@ -17,9 +34,6 @@ $(function() {
 
         var usernameArray = username.split("");
         var passwordArray = password.split("");
-
-        var passwordChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-        var usernameChars = passwordChars + "_-";
 
         var userCheck = true;
         var passCheck = true;
@@ -46,7 +60,7 @@ $(function() {
 
         $.each (usernameArray, function( value ) {
 
-            if (!(usernameChars.indexOf(usernameArray[value]) >= 0)) {
+            if (!(USERNAME_CHARACTERS.indexOf(usernameArray[value]) >= 0)) {
                 userCheck = false;
             }
         });
@@ -59,7 +73,7 @@ $(function() {
 
         $.each (passwordArray, function( value ) {
 
-            if (!(passwordChars.indexOf(passwordArray[value]) >= 0)) {
+            if (!(PASSWORD_CHARACTERS.indexOf(passwordArray[value]) >= 0)) {
                 passCheck = false;
             }
         });
