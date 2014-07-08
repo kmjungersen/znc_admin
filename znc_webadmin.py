@@ -73,4 +73,6 @@ class ZNCServer():
                             "&network=freenode")
         self.br.select_form(nr=0)
         self.br.form['name'] = "#cos"
+        self.br.form['buffercount'] = "500"
+        self.br.form['autoclearchanbuffer'] = []
         self.br.submit()
