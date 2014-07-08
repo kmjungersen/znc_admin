@@ -3,6 +3,18 @@ from flask import render_template
 from flask import jsonify
 from local import URI, USERNAME_CHARACTERS, PASSWORD_CHARACTERS,\
     ZNC_WEBADMIN_PORT, KIWI_CLIENT_PORT, REGISTER_PORT
+from mako.template import Template
+from mako.lookup import TemplateLookup
+
+mako_lookup = TemplateLookup(directories=['templates'])
+
+
+def render_mako(tpl, **kwargs):
+    return mako_lookup.get_template(tpl).render(**kwargs)
+
+kiwi_url = 'http://'+URI+':'+KIWI_CLIENT_PORT+'/'
+znc_url = 'https://'+URI+':'+ZNC_WEBADMIN_PORT+'/'
+print kiwi_url
 
 app = Flask(__name__)
 
@@ -10,7 +22,7 @@ app = Flask(__name__)
 @app.route('/')
 def home():
 
-    return render_template("index.html")
+    return render_mako("index.mako", kiwi_url=kiwi_url, znc_url=znc_url)
 
 @app.route('/register/')
 def register():
