@@ -1,11 +1,12 @@
 import mechanize
+from local import URI, ZNC_WEBADMIN_PORT, ADMIN_USERNAME, ADMIN_PASSWORD
 
-# URI of ZNC server webdmin access
-URI = "https://107.170.134.161:5001/"
+full_uri = 'https://'+URI+':'+ZNC_WEBADMIN_PORT+'/'
 
 class ZNCServer():
 
-    def __init__(self, username, admin_password, uri=URI):
+    def __init__(self, admin_username=ADMIN_USERNAME,
+                 admin_password=ADMIN_PASSWORD, uri=full_uri):
         """ Initialize a mechanize Browser object and login as an admin """
 
         # Create a mechanize Browser ob
@@ -18,7 +19,7 @@ class ZNCServer():
         # Login to the webadmin
         self.br.open(uri)
         self.br.select_form(nr=0)
-        self.br.form['user'] = username
+        self.br.form['user'] = admin_username
         self.br.form['pass'] = admin_password
         self.br.submit()
 
