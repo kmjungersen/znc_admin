@@ -1,7 +1,8 @@
 from flask import Flask
 from flask import render_template
 from flask import jsonify
-from local import URI, USERNAME_CHARACTERS, PASSWORD_CHARACTERS, ZNC_WEBADMIN_PORT, KIWI_CLIENT_PORT, REGISTER_PORT
+from local import URI, USERNAME_CHARACTERS, PASSWORD_CHARACTERS,\
+    ZNC_WEBADMIN_PORT, KIWI_CLIENT_PORT, REGISTER_PORT
 
 app = Flask(__name__)
 
