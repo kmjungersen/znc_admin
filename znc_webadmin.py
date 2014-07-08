@@ -72,5 +72,7 @@ class ZNCServer():
         self.br.follow_link(url="addchan?user=" + username +
                             "&network=freenode")
         self.br.select_form(nr=0)
-        self.br.form['name'] = "#cos"
+        self.br.form['name'] = "#cos2"
+        self.br.form['buffercount'] = "500"
+        self.br.form['autoclearchanbuffer'] = []
         self.br.submit()
