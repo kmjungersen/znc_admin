@@ -27,30 +27,25 @@ from txsockjs.factory import SockJSFactory
 from txsockjs.utils import broadcast
 
 from znc_webadmin import ZNCServer
-import sys
 import ast
 
+from local import REGISTER_PORT
 
 class TwistedSockJSConnection(Protocol):
     """TwistedSockJSConnection is a Twisted protocol server object.
     """
 
     def __init__(self):
-        """We start by taking 2 command line arguments: the admin's
-        username and password.  The URL is customizable, and can be passed
-        with the UN and PWD; otherwise it will default to 107.170.134.161.
+        """to start the ZNC server, you will need a username, password,
+        and URI of the webadmin with which to connect.
+        By default, as long as you have correctly configured local.py,
+        it will automatically input these by default. Otherwise, you
+        can change the below code to:
 
-        Usage:
+        self.znc_admin = ZNCServer(<your usermane>, <your password>,\
+                                   <the uri of the target webadmin>)"""
 
-            znc_uri = <desired URI for ZNC>
-            self.znc_admin = ZNCServer(admin_username, admin_password, znc_uri)
-
-        """
-
-        admin_username = sys.argv[1]
-        admin_password = sys.argv[2]
-
-        self.znc_admin = ZNCServer(admin_username, admin_password)
+        self.znc_admin = ZNCServer()
 
         self.message = ''
         self.status = False
@@ -167,7 +162,7 @@ if __name__ == '__main__':
 
     sockjs = SockJSFactory(Factory.forProtocol(TwistedSockJSConnection))
 
-    reactor.listenTCP(4001, sockjs)
+    reactor.listenTCP(int(REGISTER_PORT), sockjs)
 
     #TODO(kmjungersen, asmacdo) - Add SSL support!!!
 
