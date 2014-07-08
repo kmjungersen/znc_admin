@@ -2,10 +2,10 @@ $(function() {
 
     console.log('Page loaded.');
 
-    var SERVER = null;
-    var LOCALHOST = null;
-    var USERNAME_CHARACTERS = null;
-    var PASSWORD_CHARACTERS = null;
+    var SERVER;
+    var LOCALHOST;
+    var USERNAME_CHARACTERS;
+    var PASSWORD_CHARACTERS;
 
     $.ajax({
         type: "GET",
