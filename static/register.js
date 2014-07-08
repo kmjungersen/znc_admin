@@ -11,7 +11,7 @@ $(function() {
         type: "GET",
         url: "/register/config/",
         success: function (data) {
-            SERVER =  data.URI+':'+data.REGISTER_PORT;
+            SERVER =  'http://' + data.URI+':'+data.REGISTER_PORT;
             LOCALHOST = 'http://127.0.0.1:'+data.REGISTER_PORT;
             USERNAME_CHARACTERS = data.USERNAME_CHARACTERS;
             PASSWORD_CHARACTERS = data.PASSWORD_CHARACTERS;
@@ -89,7 +89,7 @@ $(function() {
             var info = "{ \"username\" : \"" + username + "\" , "
                     + " \"password\" : \"" + password + "\" }";
 
-            var Sock = new SockJS(LOCALHOST);
+            var Sock = new SockJS(SERVER);
 
             Sock.onopen = function () {
 
