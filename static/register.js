@@ -22,6 +22,16 @@ $(function() {
         }
     });
 
+    function createDict(username, password) {
+
+        var user_dict = '';
+
+        user_dict = "{ \"username\" : \"" + username + "\" , "
+                    + " \"password\" : \"" + password + "\" }";
+
+        return user_dict
+    }
+
     $( "form" ).submit(function(event) {
 
         event.preventDefault();
@@ -86,8 +96,7 @@ $(function() {
 
         if (check) {
 
-            var info = "{ \"username\" : \"" + username + "\" , "
-                    + " \"password\" : \"" + password + "\" }";
+            var info = createDict(username, password);
 
             var Sock = new SockJS(SERVER);
 
