@@ -1,3 +1,11 @@
+#WARNING
+=-=-=-=-=-=-=-=-=--=-=
+
+THIS BRANCH IS IN DEVELOPMENT AND IS CURRENTLY __NOT__ OPERATIONAL!
+
+=-=-=-=-=-=-=-=-=--=-=
+
+
 ### Registering with the COS IRC Network
 For future reference, all of the links to these services are [here](http://107.170.134.161:5000/).
 
@@ -50,4 +58,4 @@ NickServ will send you an email. Follow those instructions to complete the regis
 
     * Some clients require that you change settings via IRC commands:
         `/server 107.170.134.161 +5001 username:password`
-The server is using SSL. For some clients, this is indicated by the '+'. You may need to add to the command otherwise. 
+The server is using SSL. For some clients, this is indicated by the '+'. You may need to add to the command otherwise.
