@@ -12,7 +12,7 @@ ADMIN_USERNAME = "username"
 ADMIN_PASSWORD = "password"
 
 # URI (IP address) of the server you are running this out of
-URI = "https://107.170.134.161"
+URI = "https://192.168.111.111"
 
 # All characters allowed in a username on this service
 USERNAME_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890-_"
@@ -27,7 +27,7 @@ PASSWORD_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz12345
 # Only edit these variables if you need to run on ports other than the default ones
 
 # Port of the znc_webadmin
-ZNC_WEBADMIN_PORT = "5001"
+ZNC_WEBADMIN_PORT = "3000"
 
 # Port of the kiwiirc client
 KIWI_CLIENT_PORT = "7778"
