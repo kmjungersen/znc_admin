@@ -98,7 +98,7 @@ $(function() {
 
             var info = createDict(username, password);
 
-            var Sock = new SockJS('http://127.0.0.1:4001');
+            var Sock = new SockJS('http://127.0.0.1:4002');
 
             Sock.onopen = function () {
 
@@ -113,15 +113,20 @@ $(function() {
                     // Message recieved, sock needs to be closed
                     // ASAP to leave the line open
                     Sock.close();
+                    console.log(e.data);
 
                     // On success
                     if (e.data.charAt(0) === 'S') {
                         alert(e.data);
                         $("#status").text("");
+
                         //redirect to homepage
                         window.location.href = "/";
+                    }
                     // On fail
-                    } else { $("#status").text(e.data); }
+                    else {
+                        $("#status").text(e.data);
+                    }
                 }
             };
 
