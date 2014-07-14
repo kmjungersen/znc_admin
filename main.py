@@ -31,14 +31,16 @@ from twisted.python import log
 from txsockjs.factory import SockJSFactory as TXSockJSFactory
 from txsockjs.utils import broadcast
 
-#TODO - remove this
-from znc_webadmin import ZNCServer
-
 # system imports
+import ConfigParser
 import sys
 import ast
 
-from local import REGISTER_PORT
+# Import settings
+from load_settings import LocalSettings
+
+CONFIG_FILE = 'znc_settings.conf'
+conf = LocalSettings(CONFIG_FILE)
 
 
 class SockJSProtocol(Protocol):
@@ -125,31 +127,6 @@ class SockJSProtocol(Protocol):
 
         return desired_username, desired_password
 
-    # def validate_username(self, username):
-    #     """This function will check the list of users in ZNC and determine
-    #     if the user's desired username is available.
-    #
-    #     Args:
-    #         username: the username which the user wishes to use
-    #
-    #     Returns:
-    #         status: a boolean describing whether or not the user may use
-    #                 their desired username
-    #         message: The success/error message that will be posted
-    #                 to the user's registration page.
-    #
-    #     """
-    #
-    #     if username in self.znc_admin.users:
-    #
-    #         message = "This username has already been registered. Please choose another or contact your admin"
-    #         return False, message
-    #
-    #     else:
-    #
-    #         message = 'Success! You are now registered.'
-    #         return True, message
-
     def validate_username(self, username):
         """This function will check the list of users in ZNC and determine
         if the user's desired username is available.
@@ -180,12 +157,21 @@ class SockJSProtocol(Protocol):
 
     def get_user_list(self):
 
+        raw_user_list = irc_factory.p.raw_user_list
         users = []
 
+        for i, line in enumerate(raw_user_list):
+
+            if not line.startswith('+') and 'Username' not in line:
+                user = line.split('|', 1)[0]
+
+                #TODO(KMJUNGERSEN) - remove whitespace at the end of username
+
+                users.append(user)
+
+        IRCInteraction.raw_user_list = []
+
         return users
-
-
-
 
     def add_user(self, data):
         """This function will start the process of adding a new ZNC user.
@@ -207,11 +193,19 @@ class SockJSProtocol(Protocol):
 
         if self.status:
 
+            self.send_irc_command('PRIVMSG *controlpanel adduser '
+                                  + username + ' ' + password)
+
+
             print 'Added a new user!  "' + username + '" is now registered.'
 
-            self.znc_admin.add_user(username, password)
+            # self.znc_admin.add_user(username, password)
 
         broadcast(self.message, self.factory.transports)
+
+    def send_irc_command(self, command):
+
+        self.factory.sendline(command)
 
 
 class SockJSFactory(Factory):
@@ -219,7 +213,7 @@ class SockJSFactory(Factory):
     protocol = SockJSProtocol
 
     def __init__(self, irc_protocol):
-        # self.irc = irc_protocol
+        self.irc = irc_protocol
         # self.msg = irc_protocol.msg
         # self.join = irc_protocol.join
         self.sendLine = irc_protocol.sendLine
@@ -227,13 +221,14 @@ class SockJSFactory(Factory):
 
 class IRCInteraction(irc.IRCClient):
 
-    nickname = znc_username
-    password = znc_password
+    nickname = conf.znc_username
+    password = conf.znc_password
 
     def connectionMade(self):
         print 'IRC - Connection Made!'
         irc.IRCClient.connectionMade(self)
         self.factory.the_client = self
+        self.raw_user_list = []
 
     def signedOn(self):
         print 'IRC - Signed On'
@@ -249,18 +244,23 @@ class IRCInteraction(irc.IRCClient):
         user = user.split('!', 1)[0]
 
         # Check to see if they're sending me a private message
-        if channel == self.nickname:
-            msg = "It isn't nice to whisper!  Play nice with the group."
-            self.msg(user, msg)
-            return
+        # if channel == self.nickname:
+        #     msg = "It isn't nice to whisper!  Play nice with the group."
+        #     self.msg(user, msg)
+        #     return
 
         # Otherwise check to see if it is a message directed at me
-        elif msg.startswith(self.nickname + ":"):
+        if msg.startswith(self.nickname + ":"):
             # msg = "%s: I am a log bot" % user
             print 'IRC - Sending message: msg'
 
             self.msg(channel, msg)
             self.sendLine(msg)
+
+        elif user == '*controlpanel' and not msg.startswith('Unknown'):
+
+            self.raw_user_list.append(msg)
+
             return
 
     def alterCollidedNick(self, nickname):
@@ -274,12 +274,13 @@ class IRCInteraction(irc.IRCClient):
 class IRCFactory(protocol.ClientFactory):
 
     def __init__(self):
-        self.channel = channel
+        self.channel = conf.channel
+        self.p = ''
 
     def buildProtocol(self, addr):
-        p = IRCInteraction()
-        p.factory = self
-        return p
+        self.p = IRCInteraction()
+        self.p.factory = self
+        return self.p
 
     def msg(self, msg):
         print 'IRC/SockJS - Sending message to channel: ', self.channel, msg
@@ -289,83 +290,13 @@ class IRCFactory(protocol.ClientFactory):
         print 'IRC/SockJS - Sending line: ' + line
         self.the_client.sendLine(line)
 
-# class SockJSProtocol(Protocol):
-#
-#     def __init__(self):
-#         # self.msg = msg_fn
-#         # self.message = ''
-#         pass
-#
-#     def connectionMade(self):
-#         print 'SockJS connected!'
-#
-#         if not hasattr(self.factory, "transports"):
-#             self.factory.transports = set()
-#         self.factory.transports.add(self.transport)
-#
-#     def dataReceived(self, data):
-#         data = data.encode('utf-8')
-#
-#         if data.startswith('/'):
-#             split_data = data.split(' ', 1)
-#             function = split_data[0]
-#             parameters = split_data[1]
-#
-#             if function == '/adduser':
-#                 desired_username = split_data.split(' ', 1)
-#                 # self.factory.join(data)
-#                 self.factory.join(channel)
-#
-#             elif data.startswith('/me '):
-#                 action = data.replace('/me ', '')
-#                 self.factory.sendLine()
-#
-#             else:
-#                 self.factory.sendLine()
-#
-#         self.factory.msg(data)
-
-
-
-
-def load_settings(config_file_path):
-
-    settings = {}
-
-    with open(config_file_path) as infile:
-        for line in infile:
-            if not line.startswith('#') or line.startswith(' '):
-
-                info = line.split('=', 1)
-
-                variable = info[0]
-                value = info[1]
-
-                settings[variable] = value
-
-    return settings
-
 
 if __name__ == '__main__':
 
     log.startLogging(sys.stdout)
 
-    config_file = 'znc_settings.conf'
-
-    config_settings = load_settings(config_file)
-
-    znc_ip = config_settings['ZNC_IP_ADDRESS']
-    znc_port = int(config_settings['ZNC_PORT_NUMBER'])
-    znc_username = config_settings['ZNC_USERNAME']
-    znc_password = config_settings['ZNC_PASSWORD']
-
-    register_port = int(config_settings['REGISTER_PORT'])
-    channel = config_settings['DEFAULT_CHANNEL']
-
-
-
-    if not channel.startswith('#'):
-        channel = '#' + channel
+    if not conf.channel.startswith('#'):
+        channel = '#' + conf.channel
 
     # Start building the factories
     irc_factory = IRCFactory()
@@ -375,12 +306,10 @@ if __name__ == '__main__':
     sockjs_factory = TXSockJSFactory(relay_factory)
 
     # Connects the IRC side of the bot
-    reactor.connectTCP("irc.freenode.net", 6667, irc_factory)
-
-
+    reactor.connectTCP(conf.znc_ip, conf.znc_port, irc_factory)
 
     # Connects the SockJS side of the bot
-    reactor.listenTCP(int(register_port), sockjs_factory)
+    reactor.listenTCP(int(conf.register_port), sockjs_factory)
 
     #TODO(kmjungersen) - add SSL support
 

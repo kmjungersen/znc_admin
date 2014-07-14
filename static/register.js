@@ -98,7 +98,7 @@ $(function() {
 
             var info = createDict(username, password);
 
-            var Sock = new SockJS(SERVER);
+            var Sock = new SockJS('http://127.0.0.1:4001');
 
             Sock.onopen = function () {
 
