@@ -2,8 +2,21 @@ from ConfigParser import RawConfigParser
 
 
 class LocalSettings():
+    """ This class houses all settings for the ZNC web registration app.
+
+    Using `ConfigParser,` we can easily parse a configuration file to load
+    all customizable options for the app.
+
+    """
 
     def __init__(self, config_file='znc_settings.conf'):
+        """ After declaring an instance of this class, settings from the
+        config file can easily be accessed as attribute of that instance.
+
+
+        :param config_file: the path for the config file the user wishes to use
+
+        """
 
         settings = self.load_settings(config_file)
 
@@ -16,8 +29,14 @@ class LocalSettings():
         self.username_chars = settings['username_characters']
         self.password_chars = settings['password_characters']
 
+        self.register_ip = settings['registration_ip_address']
         self.register_port = int(settings['registration_port_number'])
+
         self.channel = settings['default_channel']
+
+        if not self.channel.startswith('#'):
+            self.channel = '#' + self.channel
+
         self.contact_email = settings['contact_email']
 
         self.client_enabled = bool(settings['custom_irc_client_enabled'])
@@ -25,6 +44,15 @@ class LocalSettings():
         self.client_port = int(settings['client_port'])
 
     def load_settings(self, config_file_path):
+        """ This function creates the RawConfigParser object that parses
+        settings from the config file.  It then takes those settings and
+        creates a dict of the options which can then be made into attributes.
+
+        :param config_file_path: the file path of the config file
+
+        :return config_settings: a dict with all parsed settings from the file
+
+        """
 
         config_settings = {}
 
