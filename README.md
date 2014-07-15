@@ -1,7 +1,7 @@
 #WARNING
 =-=-=-=-=-=-=-=-=--=-=
 
-THIS BRANCH IS IN DEVELOPMENT AND IS CURRENTLY __NOT__ OPERATIONAL!
+This branch is currently in development, but __is__ operational!  Testing is suggested!
 
 =-=-=-=-=-=-=-=-=--=-=
 
