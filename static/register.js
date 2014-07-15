@@ -3,7 +3,7 @@ $(function() {
     console.log('Page loaded.');
 
     var SERVER;
-    var LOCALHOST;
+    var SOCKJS_ADDRESS;
     var USERNAME_CHARACTERS;
     var PASSWORD_CHARACTERS;
 
@@ -12,7 +12,7 @@ $(function() {
         url: "/register/config/",
         success: function (data) {
             SERVER =  'http://' + data.URI+':'+data.REGISTER_PORT;
-            LOCALHOST = 'http://127.0.0.1:'+data.REGISTER_PORT;
+            SOCKJS_ADDRESS = 'http://127.0.0.1:'+data.REGISTER_PORT;
             USERNAME_CHARACTERS = data.USERNAME_CHARACTERS;
             PASSWORD_CHARACTERS = data.PASSWORD_CHARACTERS;
         },
@@ -98,7 +98,7 @@ $(function() {
 
             var info = createDict(username, password);
 
-            var Sock = new SockJS('http://127.0.0.1:4002');
+            var Sock = new SockJS(SOCKJS_ADDRESS);
 
             Sock.onopen = function () {
 
