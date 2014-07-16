@@ -1,5 +1,6 @@
-""" ZNC WEB REGISTRATION APPLICATION
-    --------------------------------
+"""
+ZNC WEB REGISTRATION APPLICATION
+--------------------------------
 
 App.py houses the Flask app that serves the registration page.  The
 settings for this our housed in a config file and then loaded into the app.
@@ -10,24 +11,15 @@ Client-side configuration is also loaded here and passed using JSON.
 from flask import Flask
 from flask import render_template
 from flask import jsonify
+from flask import redirect
 
-from mako.lookup import TemplateLookup
 from load_settings import LocalSettings
 
 CONFIG_FILE = 'znc_settings.conf'
 settings = LocalSettings(CONFIG_FILE)
 
-mako_lookup = TemplateLookup(directories=['templates'])
-
 app = Flask(__name__)
 
-
-def render_mako(tpl, **kwargs):
-    """ This function renders the home page from a mako file in the
-    'templates' directory.
-
-    """
-    return mako_lookup.get_template(tpl).render(**kwargs)
 
 @app.route('/')
 def home():
@@ -35,10 +27,33 @@ def home():
     registration page, our own KiwiIRC Client, and the ZNC web administration
     page
 
+    :return render_template(): a rendered web page from an html file
+
     """
 
-    znc_url = 'https://' + settings.znc_ip + ':' + \
-          str(settings.znc_port) + '/'
+    return render_template('index.html')
+
+
+@app.route('/Register/')
+def register():
+    """ This function serves the 'register' page, on which users input the
+    username and password they wish to use for IRC.
+
+    :return render_template(): a rendered web page from an html file
+
+    """
+
+    return render_template('register.html')
+
+
+@app.route('/IRC_client/')
+def load_irc_client():
+    """ This function redirects to the IRC client page, which will either point
+    to a self-hosted IRC client or a publicly hosted one.
+
+    :return redirect(): a redirect command to a specific URL
+
+    """
 
     if settings.client_enabled:
 
@@ -49,36 +64,41 @@ def home():
 
         irc_client_url = 'https://kiwiirc.com'
 
-    return render_mako("index.mako", kiwi_url=irc_client_url, znc_url=znc_url)
+    return redirect(irc_client_url, code=200)
 
-@app.route('/register/')
-def register():
-    """ This function serves the 'register' page, on which users input the
-    username and password they wish to use for IRC.
 
-    Returns:
-        template: a rendered webpage from an html file
+@app.route('/ZNC_web_admin/')
+def load_znc_admin():
+    """ This function redirects to the ZNC web interface.
+
+    :return redirect(): a redirect command to a specific URL
 
     """
 
-    template = render_template('register.html')
+    znc_url = 'https://' + settings.znc_ip + ':' + \
+              str(settings.znc_port) + '/'
 
-    return template
+    return redirect(znc_url, code=200)
+
 
 @app.route('/register/config/')
 def config():
     """ The function called at this route retrieves settings from a
     configuration class
 
+    :return config_settings: a JSON file with all settings that are needed
+                             client-side
+
     """
 
     config_settings = jsonify(URI=settings.znc_ip,
-                   USERNAME_CHARACTERS=settings.username_chars,
-                   PASSWORD_CHARACTERS=settings.password_chars,
-                   REGISTER_PORT=settings.register_port,
-                   )
+                              USERNAME_CHARACTERS=settings.username_chars,
+                              PASSWORD_CHARACTERS=settings.password_chars,
+                              REGISTER_PORT=settings.register_port,
+                              )
 
     return config_settings
+
 
 if __name__ == '__main__':
     # Run the app
