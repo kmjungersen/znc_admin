@@ -27,21 +27,19 @@ from twisted.python import log
 from txsockjs.factory import SockJSFactory as TXSockJSFactory
 from txsockjs.utils import broadcast
 
-# system imports
+# System Imports
 import sys
 import ast
 
-# Import settings
+# Import Settings
 from load_settings import LocalSettings
 
-# Import docopt
+# Import Docopt
 from docopt import docopt
 
 # CONFIG_FILE is the file pointer of our configuration file
 CONFIG_FILE = 'znc_settings.conf'
 settings = LocalSettings(CONFIG_FILE)
-
-#TODO(kmjungersen) - add option for verbose output?
 
 
 class UserObject():
@@ -57,6 +55,22 @@ class UserObject():
         self.failure_message = 'Error: User [{}] already exists!'
         self.add_user_command = 'PRIVMSG *controlpanel adduser {0} {1}'
 
+    def add_user(self, data):
+        """ This function will start the process of adding a new ZNC user.
+        It begins by retrieving a username and password from the socket via
+        `parse_user_info()`, and then validates the desired username. If
+        successful, it will add the user to ZNC, and then relay the
+        success/failure status and message back to the client.
+
+        :param data: the raw data sent from the registration page client-side
+                     to the server via a SockJS connection
+
+        """
+
+        username, password = self.parse_user_info(data)
+
+        self.new_user(username, password)
+
     def new_user(self, username, password):
         """ This function is called every time we need to create a new user.
         It simply sends the appropriate command to IRC.
@@ -70,7 +84,7 @@ class UserObject():
 
         command = self.add_user_command.format(username, password)
 
-        irc_factory.sendLine(command)
+        irc_factory.send_line(command)
 
     def parse_irc_feedback(self, feedback):
         """ This function takes the feedback from ZNC (via IRC) and parses
@@ -91,19 +105,36 @@ class UserObject():
 
             status_message = feedback
 
-        self.send_client_response(status_message)
+        send_client_response(status_message)
 
         log_message(status_message)
 
-    def send_client_response(self, return_message):
-        """ This function simply sends the appropriate status message back
-        to the user via SockJS.
+        self.username = ''
 
-        :param return_message: the message to be returned to the user
+    @staticmethod
+    def parse_user_info(information):
+        """ This function will take the data passed over the SockJS connection
+        and convert it to a dict.  The data it is receiving is a string
+        of a dict.
+
+        :param information: the data passed over the connection, which includes
+                            the desired username and password in the form of
+                            a string
+
+        :return: desired_username: the username to be registered
+        :return: desired_password: the password for said user
 
         """
 
-        relay_factory.send(return_message)
+        # The literal conversion of a string to a dict
+        user_info = ast.literal_eval(information)
+
+        desired_username = user_info['username']
+
+        desired_password = user_info['password']
+
+        return desired_username, desired_password
+
 
 # Declare an instance of UserObject for use on both the SockJS and IRC
 # sides of the bot
@@ -155,99 +186,101 @@ class SockJSProtocol(Protocol):
 
         log_message('Connection lost...')
 
-    def parse_user_info(self, information):
-        """ This function will take the data passed over the SockJS connection
-        and convert it to a dict.  The data it is receiving is a string
-        of a dict.
-
-        :param information: the data passed over the connection, which includes
-                            the desired username and password in the form of
-                            a string
-
-        :return: desired_username: the username to be registered
-        :return: desired_password: the password for said user
-
-        """
-
-        # The literal conversion of a string to a dict
-        user_info = ast.literal_eval(information)
-
-        desired_username = user_info['username']
-
-        desired_password = user_info['password']
-
-        return desired_username, desired_password
-
-    def add_user(self, data):
-        """ This function will start the process of adding a new ZNC user.
-
-        It begins by retrieving a username and password from the socket via
-        `parse_user_info()`, and then validates the desired username. If
-        successful, it will add the user to ZNC, and then relay the
-        success/failure status and message back to the client.
-
-        :param data: the raw data sent from the registration page client-side
-                     to the server via a SockJS connection
-
-        """
-
-        username, password = self.parse_user_info(data)
-
-        USER_ACTION.new_user(username, password)
-
 
 class SockJSFactory(Factory):
-    """ A SockJS Factory, using SockJSProtocol as the protocol
+    """ A SockJS Factory, which uses SockJSProtocol as the protocol.  This
+    class inherits from the `Factory` parent class of Twisted/ TXSockJS.
 
     """
 
     protocol = SockJSProtocol
 
     def __init__(self):
+
         self.protocol = SockJSProtocol
 
     def send(self, message):
+        """ This function simply sends a message via SockJS back to the client.
+        It is defined outside of the protocol class so that it can be accessed
+        outside of the instance of this factory class.
+
+        :param message: the message to send back to the client
+
+        """
 
         broadcast(message, self.transports)
 
 
 class IRCProtocol(irc.IRCClient):
+    """ This is the IRC Client Protocol class, which handles all interaction
+    with IRC.  The nickname and password it uses to log in are derived from
+    the config file.  This is necessary so the bot can log into ZNC as an
+    admin, enabling the bot to actually perform user actions.
+
+    """
 
     nickname = settings.znc_username
     password = settings.znc_password
 
     def __init__(self):
-        self.raw_user_list = []
+        """ Defines the 'control_panel' with which the bot will interact.
+        Control_panel handles everything related to the addition/deletion
+        of users.
+
+        """
         self.control_panel = '*controlpanel'
 
     def connectionMade(self):
+        """ This function is called when the bot successfully makes a new
+        connection with IRC.
+
+        """
+
         log_message('IRC - Connection Made!')
+
         irc.IRCClient.connectionMade(self)
         self.factory.the_client = self
-        # self.raw_user_list = []
 
     def signedOn(self):
+        """ This function is called when the bot is successfully signed on to
+        IRC.
+
+        """
+
         log_message('IRC - Signed On')
+
         self.join(self.factory.channel)
 
     def joined(self, channel):
-        """This will get called when the bot joins the channel.
+        """ This function is called when the bot joins the specified channel.
+
+        :param channel: the channel that the bot has just joined
+
         """
 
         log_message('IRC - Joined a Channel: ' + channel)
+
         self.msg(channel, 'ZNC-Reg-Bot Joined!')
 
     def privmsg(self, user, channel, message):
-        """ Triggered when the bot receives a message.
+        """ This function is called when the bot receives a message.  This is
+        where we can interpret feedback from the ZNC control_panel.
+
+        We do so by performing a logical evaluation to see if (a) the message
+        is a response from control_panel or (b) if someone has sent the bot a
+        private message.  It will ignore everything else.
 
         :param user: the user that sent the message
-        :param channel
+        :param channel: the channel that message was sent on
+        :param message: the message sent on the specified channel by the
+                        specified user
         """
 
         user = user.split('!', 1)[0]
 
         if user == self.control_panel:
 
+            # Parse the information received back from control_panel
             USER_ACTION.parse_irc_feedback(message)
 
         elif channel == self.nickname:
@@ -255,6 +288,13 @@ class IRCProtocol(irc.IRCClient):
             self.automated_response(user)
 
     def automated_response(self, user):
+        """ This function allows us to return an automated response to a user.
+        This is called when a user private-messages the bot, and includes a
+        contact email address (configured in the config file).
+
+        :param user: the user to send the message to
+
+        """
 
         message = "I am a znc-registration bot.  For more " \
                   "information, please contact "\
@@ -266,55 +306,107 @@ class IRCProtocol(irc.IRCClient):
 
 
 class IRCFactory(protocol.ClientFactory):
+    """ IRCFactory is a Twisted ClientFactory object.  It wraps the IRCClient
+    protocol object, and enables us to interact with IRC functions outside of
+    the object itself.
+
+    """
 
     def __init__(self):
 
         self.channel = settings.channel
 
-    def buildProtocol(self, addr):
+    def buildProtocol(self, address):
+        """ This function is called when building the reactor, and it builds
+        the IRC Protocol.
 
-        p = IRCProtocol()
-        p.factory = self
-        return p
+        :param address: The address to build the protocol with
 
-    def msg(self, msg):
+        :return irc_protocol: an instance of the IRCProtocol object
+
+        """
+
+        irc_protocol = IRCProtocol()
+        irc_protocol.factory = self
+
+        return irc_protocol
+
+    def message(self, message):
+        """ This is the messaging function of IRC, which we've defined in the
+        factory (seemingly redundantly) because then it can be used outside
+        of the factory instance.  If verbose output is enabled, it will log
+        this message to the terminal.
+
+        :param message: the message to send to IRC
+
+        """
 
         log_message('IRC/SockJS - Sending message to channel: ' +
-                    self.channel + msg)
-        self.the_client.msg(self.channel, msg)
+                    self.channel + message)
 
-    def sendLine(self, line):
+        self.the_client.msg(self.channel, message)
+
+    def send_line(self, line):
+        """ This the sendLine function of IRC, which (much like `msg`) is
+        defined (seemingly redundantly) here so it can be used outside of the
+        factory instance.  This function will NOT log the line to the terminal
+        because sensitive information (i.e. - passwords) are being passed
+        through this function.
+
+        :param line: the command line to send to IRC
+
+        """
 
         self.the_client.sendLine(line)
 
 
 def log_message(message):
     """ This function simply logs a message to the terminal output if 
-    verbose output was selected when running the script
-    
+    verbose output was selected when running the script initially.  Twisted
+    has built in logging functionality, so if verbose output was enabled that
+    will be too.  It will prepend a time stamp and some server information to
+    the beginning of all messages printed through this function.
+
+    :param message: the message to be logged
+
     """
 
     if verbose_output_enabled:
 
         print message
 
+
+def send_client_response(return_message):
+    """ This function simply sends the appropriate status message back
+    to the user via SockJS.
+
+    :param return_message: the message to be returned to the user
+
+    """
+
+    relay_factory.send(return_message)
+
+
 if __name__ == '__main__':
 
     options = docopt(__doc__)
 
-    if options['--verbose'] == True:
+    if options['--verbose']:
 
         verbose_output_enabled = True
 
         log.startLogging(sys.stdout)
 
+    else:
+
+        verbose_output_enabled = False
+
+        print 'Server started!'
+
     if not settings.channel.startswith('#'):
         join_channel = '#' + settings.channel
 
     # Start building the factories
-
-    # create_user = UserObject()
-
     irc_factory = IRCFactory()
 
     relay_factory = SockJSFactory()
@@ -330,16 +422,5 @@ if __name__ == '__main__':
 
     #TODO(kmjungersen) - add SSL support
 
-    options = docopt(__doc__)
-
-    verbose_output_enabled = False
-
-    if options['--verbose'] == True:
-        
-        verbose_output_enabled = True
-
-    else:
-
-        print 'Server started!'
-
+    # Start the Twisted Reactor
     reactor.run()
