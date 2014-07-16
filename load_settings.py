@@ -1,3 +1,11 @@
+"""
+ZNC WEB REGISTRATION APPLICATION
+---------------------------------
+
+Load Settings Module
+
+"""
+
 from ConfigParser import RawConfigParser
 
 
