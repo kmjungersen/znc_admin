@@ -46,10 +46,11 @@ NickServ will send you an email. Follow those instructions to complete the regis
 
 *  Pointing your IRC client to the ZNC bouncer is different based on the client. The basic details you need:
 
-    |Network name: | anything you want!|
-    |server:| 107.170.134.161|
-    |port:| 5001|
-    |SSL:| yes|
+|Network name: | anything you want!|
+|---|---|
+|server:| 107.170.134.161|
+|port:| 5001|
+|SSL:| yes|
 
     * Nickname and Login name are the ones you just registered, as well as the server password.
 
@@ -59,3 +60,10 @@ NickServ will send you an email. Follow those instructions to complete the regis
     * Some clients require that you change settings via IRC commands:
         `/server 107.170.134.161 +5001 username:password`
 The server is using SSL. For some clients, this is indicated by the '+'. You may need to add to the command otherwise.
+
+### Important Installation notes:
+
+* Install the following dependices with `sudo apt-get <item>`
+    * build-essential
+    * libssl-dev
+    * libffi-dev
