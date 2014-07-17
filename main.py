@@ -42,8 +42,8 @@ CONFIG_FILE = 'znc_settings.conf'
 settings = LocalSettings(CONFIG_FILE)
 
 
-class UserObject():
-    """ UserObject is an object that can be used by both the SockJS
+class UserAdmin():
+    """ UserAdmin is an object that can be used by both the SockJS
     and IRC protocols to pass user information and perform actions between
     the two.  A single instance of this is used and can
 
@@ -54,6 +54,8 @@ class UserObject():
         self.success_message = 'User [{}] added!'
         self.failure_message = 'Error: User [{}] already exists!'
         self.add_user_command = 'PRIVMSG *controlpanel adduser {0} {1}'
+
+        self.user_action = {}
 
     def add_user(self, data):
         """ This function will start the process of adding a new ZNC user.
@@ -136,9 +138,9 @@ class UserObject():
         return desired_username, desired_password
 
 
-# Declare an instance of UserObject for use on both the SockJS and IRC
+# Declare an instance of UserAdmin for use on both the SockJS and IRC
 # sides of the bot
-USER_ACTION = UserObject()
+USER_ACTION = UserAdmin()
 
 
 class SockJSProtocol(Protocol):
