@@ -52,10 +52,23 @@ class UserAdmin():
     def __init__(self):
         self.username = ''
         self.success_message = 'User [{}] added!'
-        self.failure_message = 'Error: User [{}] already exists!'
-        self.add_user_command = 'PRIVMSG *controlpanel adduser {0} {1}'
+        self.failure_message = 'Error: User not added! [User already exists]'
 
-        self.user_action = {}
+        self.command_dict = {
+            'add_user': 'adduser <username> <password>',
+            'set_value': 'set <variable> <username> <value>',
+            'clone_user': 'cloneuser <user_to_clone> <username>',
+            'change_password': 'set password <username> <password>',
+        }
+
+        self.variable_list = [
+            'nick',
+            'altnick',
+            'ident',
+            'realname',
+        ]
+
+        # TODO(kmjungersen) - add support for all commands
 
     def add_user(self, data):
         """ This function will start the process of adding a new ZNC user.
@@ -75,7 +88,8 @@ class UserAdmin():
 
     def new_user(self, username, password):
         """ This function is called every time we need to create a new user.
-        It simply sends the appropriate command to IRC.
+        It simply sends the appropriate command to IRC, which clones an
+        existing template user.
 
         :param username: the username to be registered
         :param password: the password for the new user
@@ -84,9 +98,67 @@ class UserAdmin():
 
         self.username = username
 
-        command = self.add_user_command.format(username, password)
+        # Clones User
+        command = self.render_command('clone_user',
+                                      username=username,
+                                      password=password,
+                                      )
 
-        irc_factory.send_line(command)
+        send_irc_command(command)
+
+        # Change Password
+        command = self.render_command('change_password',
+                                      username=username,
+                                      password=password,
+                                      )
+
+        send_irc_command(command)
+
+        # Change other info
+        for item in self.variable_list:
+
+            command = self.render_command('set_value',
+                                          username=username,
+                                          password=password,
+                                          variable=item,
+                                          value=username,
+                                          )
+
+            send_irc_command(command)
+
+    def render_command(self, operation, username='', password='', variable='',
+                       value=''):
+        """ This function renders the appropriate command to send to ZNC.  It
+        will pull the correct template command from `self.command_dict` based
+        on the operation value passed here.  Then it will use any optional
+        arguments passed into the function and replace all template values
+        before returning the complete command.
+
+        :param operation: the operation to be completed
+        :param username: the desired new username (default = '')
+        :param password: the desired new password (default = '')
+        :param variable: the ZNC variable to be changed (default = '')
+        :param value: the desired value for the ZNC variable being changed
+                        (default = '')
+s
+        :return command: the formatted command, which can then be sent to ZNC
+
+        """
+        replacements = {
+            '<user_to_clone>': settings.user_to_clone,
+            '<username>': username,
+            '<password>': password,
+            '<variable>': variable,
+            '<value>': value,
+        }
+
+        command = self.command_dict[operation]
+
+        for key, value in replacements.iteritems():
+
+            command = command.replace(key, value)
+
+        return command
 
     def parse_irc_feedback(self, feedback):
         """ This function takes the feedback from ZNC (via IRC) and parses
@@ -179,7 +251,7 @@ class SockJSProtocol(Protocol):
 
         raw_data = raw_data.encode('utf-8')
 
-        self.add_user(raw_data)
+        USER_ACTION.add_user(raw_data)
 
     def connectionLost(self, reason=''):
         """ The function that is called when something severs the connection
@@ -249,20 +321,12 @@ class IRCProtocol(irc.IRCClient):
 
         """
 
-        log_message('IRC - Signed On')
-
-        self.join(self.factory.channel)
-
     def joined(self, channel):
         """ This function is called when the bot joins the specified channel.
 
         :param channel: the channel that the bot has just joined
 
         """
-
-        log_message('IRC - Joined a Channel: ' + channel)
-
-        self.msg(channel, 'ZNC-Reg-Bot Joined!')
 
     def privmsg(self, user, channel, message):
         """ This function is called when the bot receives a message.  This is
@@ -276,6 +340,7 @@ class IRCProtocol(irc.IRCClient):
         :param channel: the channel that message was sent on
         :param message: the message sent on the specified channel by the
                         specified user
+
         """
 
         user = user.split('!', 1)[0]
@@ -294,6 +359,7 @@ class IRCProtocol(irc.IRCClient):
         This is called when a user private-messages the bot, and includes a
         contact email address (configured in the config file).
 
+
         :param user: the user to send the message to
 
         """
@@ -302,7 +368,7 @@ class IRCProtocol(irc.IRCClient):
                   "information, please contact "\
                   + settings.contact_email
 
-        log_message('IRC - Sending message: ' + message)
+        # log_message('IRC - Sending message: ' + message)
 
         self.msg(user, message)
 
@@ -315,8 +381,11 @@ class IRCFactory(protocol.ClientFactory):
     """
 
     def __init__(self):
+        """ (Class has no attributes)
 
-        self.channel = settings.channel
+        """
+
+        pass
 
     def buildProtocol(self, address):
         """ This function is called when building the reactor, and it builds
@@ -389,6 +458,19 @@ def send_client_response(return_message):
     relay_factory.send(return_message)
 
 
+def send_irc_command(command, prefix='PRIVMSG *controlpanel '):
+    """ This function simply sends a specified command to IRC.
+
+    :param command: a command to send to IRC/ZNC
+    :param prefix: The prefix to add to the command, which defaults to the
+                    prefix necessary for doing most user actions with ZNC
+
+    """
+    irc_command = prefix + command
+
+    irc_factory.send_line(irc_command)
+
+
 if __name__ == '__main__':
 
     options = docopt(__doc__)
@@ -404,9 +486,6 @@ if __name__ == '__main__':
         verbose_output_enabled = False
 
         print 'Server started!'
-
-    if not settings.channel.startswith('#'):
-        join_channel = '#' + settings.channel
 
     # Start building the factories
     irc_factory = IRCFactory()
