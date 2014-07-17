@@ -64,7 +64,7 @@ def load_irc_client():
 
         irc_client_url = 'https://kiwiirc.com'
 
-    return redirect(irc_client_url, code=200)
+    return redirect(irc_client_url)
 
 
 @app.route('/ZNC_web_admin/')
@@ -75,10 +75,12 @@ def load_znc_admin():
 
     """
 
-    znc_url = 'https://' + settings.znc_ip + ':' + \
+    #TODO(kmjungersen) - change this back
+
+    znc_url = 'http://' + settings.znc_ip + ':' + \
               str(settings.znc_port) + '/'
 
-    return redirect(znc_url, code=200)
+    return redirect(znc_url)
 
 
 @app.route('/register/config/')
