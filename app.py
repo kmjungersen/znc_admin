@@ -97,6 +97,7 @@ def config():
                               USERNAME_CHARACTERS=settings.username_chars,
                               PASSWORD_CHARACTERS=settings.password_chars,
                               REGISTER_PORT=settings.register_port,
+                              REGISTER_IP=settings.register_ip,
                               )
 
     return config_settings
