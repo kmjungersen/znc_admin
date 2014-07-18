@@ -77,7 +77,7 @@ def load_znc_admin():
 
     #TODO(kmjungersen) - change this back
 
-    znc_url = 'http://' + settings.znc_ip + ':' + \
+    znc_url = 'https://' + settings.znc_ip + ':' + \
               str(settings.znc_port) + '/'
 
     return redirect(znc_url)
