@@ -19,7 +19,7 @@ from the client registration Flask app and processes it accordingly.
 
 # Twisted Imports
 from twisted.internet.protocol import Factory, Protocol
-from twisted.internet import reactor, protocol
+from twisted.internet import reactor, protocol, ssl
 from twisted.words.protocols import irc
 from twisted.python import log
 
@@ -495,7 +495,9 @@ if __name__ == '__main__':
     sockjs_factory = TXSockJSFactory(relay_factory)
 
     # Connects the IRC side of the bot
-    reactor.connectTCP(settings.znc_ip, settings.znc_port, irc_factory)
+    reactor.connectSSL(settings.znc_ip, settings.znc_port, irc_factory, ssl.ClientContextFactory())
+
+    #reactor.connectTCP(settings.znc_ip, settings.znc_port, irc_factory)
 
     # Connects the SockJS side of the bot
     port = int(settings.register_port)
