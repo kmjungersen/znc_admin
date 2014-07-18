@@ -1,8 +1,19 @@
+/*
+* ZNC WEB REGISTRATION APPLICATION
+* ---------------------------------
+*
+* This file houses the JavaScript that is executed behind the registration
+* page.  It first loads some appropriate data from the serving Flask app.
+* After the user submits their information, it sets up a SockJS connection
+* with the registration server to pass the appropriate user information for
+* registration.
+*
+* */
+
 $(function() {
 
     console.log('Page loaded.');
 
-    var SERVER;
     var SOCKJS_ADDRESS;
     var USERNAME_CHARACTERS;
     var PASSWORD_CHARACTERS;

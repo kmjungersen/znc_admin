@@ -3,43 +3,46 @@
 
 This is now the 0.2 beta version!  TESTING IS SUGGESTED!  That being said, everything should be operational!
 
+Please report any issues you might have using the issue tracker!
+
 =-=-=-=-=-=-=-=-=--=-=
 
 
 ### Registering with the COS IRC Network
 For future reference, all of the links to these services are [here](http://107.170.134.161:5000/).
 
-1. Register a username [here](http://107.170.134.161:5000/register)
-    * Note: This username should ideally be registered (or available to register) with the NickServ on IRC.  This is how your name will be displayed, so **make it something logical!!!** Some clients, including Kiwi are capable of logging you into NicServ as well if you make this the same password.
+1. Register a username [here](http://107.170.134.161:5000/Register)
+    * Note: This username should ideally be registered (or available to register) with the NickServ on IRC.  This is how your name will be displayed, so **make it something logical!** Some clients, including Kiwi, are capable of logging you into NicServ as well if you make this the same password.
 
 2. Log into IRC. You can use your favorite client if you would like, but we have a browser based service (Kiwi) running [here](http://107.170.134.161:7778/). Use the Nick and password you just registered. If you would like to user a different client, see below for more details. 
 
-3. Chat away!!!  It's recommended to bookmark these links and that you review some IRC basics below. 
+3. Chat away!  It's recommended to bookmark [this link](http://107.170.134.161:5000) for future reference and then review some IRC basics below.
 
 
 ### IRC Basics
-Note: please add to this!
-
 * Join channels like so:
 
-`/join #cos`
+    `/join #cos`
 
 * You can create channels with any name you like!  (If you aren't familiar with IRC, channels function just like chat rooms.) Creating a channel is the same syntax as joining:
 
-`/join #my_really_cool_new_channel_name`
+    `/join #my_really_cool_new_channel_name`
 
-* We are using ZNC which is a bouncer service. When you create an account, ZNC logs into IRC. What does that mean??  It means while you're not actively logged into an IRC channel, ZNC will be logged in for you, and will give you a history of messages you missed while not logged in.  It's pretty cool! 
+* We are using ZNC which is a bouncer service. When you create an account, ZNC logs into IRC. (What does that mean?)  It means while you're not actively logged into an IRC channel, ZNC will be logged in for you, and will give you a history of messages you missed while not logged in.  It's pretty cool!
+
 * You can change your bouncer settings here (including changing your password): [Web admin console](https://107.170.134.161:5001)
+
+    * Load existing modules.  Make your own modules.  Go crazy.
 
 * Register your nick with Freenode's NickServ. This username will belong reserved for you on the freenode network
 
-`/msg NickServ REGISTER <password> <email>`
+    `/msg NickServ REGISTER <password> <email>`
 
-* /msg <username> opens a private message with that person. Kiwi also allows you to click a user and chat with them directly. This Essentially opens a new channel that is just a chat between the two of you.
-
-NickServ will send you an email. Follow those instructions to complete the registration.
+    * NickServ will send you an email. Follow those instructions to complete the registration.
 
 * If you join or leave a channel in Kiwi, ZNC will also join or leave. If you want ZNC to stay and listen while you are away, simply close your browser tab or logout without leaving the rooms.
+
+* `/msg <username>` opens a private message with that person. Kiwi also allows you to click a user and chat with them directly. This Essentially opens a new channel that is just a chat between the two of you.
         
 
 ###Alternate Configurations
@@ -60,6 +63,25 @@ NickServ will send you an email. Follow those instructions to complete the regis
 * Some clients require that you change settings via IRC commands:
     `/server 107.170.134.161 +5001 username:password`
 The server is using SSL. For some clients, this is indicated by the '+'. You may need to add to the command otherwise.
+
+##Installation:
+
+Installation is very simple (in theory, of course there are always problems...), so give it a shot!  If you run into problems, report it via the issue tracker.
+
+1. Clone this repo wherever you would like it!
+
+    `$ git clone https://github.com/kmjungersen/znc_admin.git`
+
+    * Due to the configurable nature of this application, it doesn't have to be on the same server as your IRC client/ ZNC server, however our deployments have always been on the same machine as both of those items.
+
+2. Copy the config file:
+
+    `$ cd <path_where_this_lives>/znc_admin
+     $ cp znc_settings.conf.example znc_settings.conf`
+
+3. Edit the new config file to reflect your desired settings.
+
+4. TODO(kmjungersen) - The rest of this list
 
 ### Important Installation notes:
 
