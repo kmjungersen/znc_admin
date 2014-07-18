@@ -248,7 +248,7 @@ class SockJSProtocol(Protocol):
         It will take that data and begin the process of adding a user to ZNC.
 
         """
-        print raw_data
+
         raw_data = raw_data.encode('utf-8')
 
         USER_ACTION.add_user(raw_data)
@@ -465,6 +465,7 @@ def send_irc_command(command, prefix='PRIVMSG *controlpanel '):
                     prefix necessary for doing most user actions with ZNC
 
     """
+
     irc_command = prefix + command
 
     irc_factory.send_line(irc_command)
@@ -493,16 +494,13 @@ if __name__ == '__main__':
 
     sockjs_factory = TXSockJSFactory(relay_factory)
 
-    # Connects the IRC side of the bot
-    reactor.connectSSL(settings.znc_ip, settings.znc_port, irc_factory, ssl.ClientContextFactory())
-
-    #reactor.connectTCP(settings.znc_ip, settings.znc_port, irc_factory)
+    # Connects the IRC side of the bot using SSL
+    reactor.connectSSL(settings.znc_ip, settings.znc_port, irc_factory,
+                       ssl.ClientContextFactory())
 
     # Connects the SockJS side of the bot
     port = int(settings.register_port)
     reactor.listenTCP(port, sockjs_factory)
-
-    #TODO(kmjungersen) - add SSL support
 
     # Start the Twisted Reactor
     reactor.run()
