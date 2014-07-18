@@ -3,7 +3,7 @@ $(function() {
     console.log('Page loaded.');
 
     var SERVER;
-    var LOCALHOST;
+    var SOCKJS_ADDRESS;
     var USERNAME_CHARACTERS;
     var PASSWORD_CHARACTERS;
 
@@ -11,8 +11,9 @@ $(function() {
         type: "GET",
         url: "/register/config/",
         success: function (data) {
-            SERVER =  'http://' + data.URI+':'+data.REGISTER_PORT;
-            LOCALHOST = 'http://127.0.0.1:'+data.REGISTER_PORT;
+            SOCKJS_ADDRESS = 'http://' + data.REGISTER_IP + ':' +
+                data.REGISTER_PORT;
+
             USERNAME_CHARACTERS = data.USERNAME_CHARACTERS;
             PASSWORD_CHARACTERS = data.PASSWORD_CHARACTERS;
         },
@@ -21,6 +22,16 @@ $(function() {
             console.log(jqXHR.status);
         }
     });
+
+    function createDict(username, password) {
+
+        var user_dict = '';
+
+        user_dict = "{ \"username\" : \"" + username + "\" , "
+                    + " \"password\" : \"" + password + "\" }";
+
+        return user_dict
+    }
 
     $( "form" ).submit(function(event) {
 
@@ -86,10 +97,9 @@ $(function() {
 
         if (check) {
 
-            var info = "{ \"username\" : \"" + username + "\" , "
-                    + " \"password\" : \"" + password + "\" }";
+            var info = createDict(username, password);
 
-            var Sock = new SockJS(SERVER);
+            var Sock = new SockJS(SOCKJS_ADDRESS);
 
             Sock.onopen = function () {
 
@@ -104,15 +114,20 @@ $(function() {
                     // Message recieved, sock needs to be closed
                     // ASAP to leave the line open
                     Sock.close();
+                    console.log(e.data);
 
                     // On success
                     if (e.data.charAt(0) === 'S') {
                         alert(e.data);
                         $("#status").text("");
+
                         //redirect to homepage
                         window.location.href = "/";
+                    }
                     // On fail
-                    } else { $("#status").text(e.data); }
+                    else {
+                        $("#status").text(e.data);
+                    }
                 }
             };
 
