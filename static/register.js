@@ -12,9 +12,9 @@ $(function() {
         url: "/register/config/",
         success: function (data) {
             // SERVER =  'http://' + data.URI+':'+data.REGISTER_PORT;
-            // SOCKJS_ADDRESS = 'http://' + data.REGISTER_IP + ':' + data.REGISTER_PORT;
-
-            SOCKJS_ADDRESS = 'http://0.0.0.0:' + data.REGISTER_PORT
+            SOCKJS_ADDRESS = 'http://' + data.REGISTER_IP + ':' + data.REGISTER_PORT;
+		console.log(SOCKJS_ADDRESS)
+           // SOCKJS_ADDRESS = 'http://0.0.0.0:' + data.REGISTER_PORT
 
             USERNAME_CHARACTERS = data.USERNAME_CHARACTERS;
             PASSWORD_CHARACTERS = data.PASSWORD_CHARACTERS;
