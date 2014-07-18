@@ -248,7 +248,7 @@ class SockJSProtocol(Protocol):
         It will take that data and begin the process of adding a user to ZNC.
 
         """
-
+        print raw_data
         raw_data = raw_data.encode('utf-8')
 
         USER_ACTION.add_user(raw_data)
