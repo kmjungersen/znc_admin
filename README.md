@@ -1,7 +1,7 @@
-#WARNING
+#ATTENTION
 =-=-=-=-=-=-=-=-=--=-=
 
-This branch is currently in development, but __is__ operational!  Testing is suggested!
+This is now the 0.2 beta version!  TESTING IS SUGGESTED!  That being said, everything should be operational!
 
 =-=-=-=-=-=-=-=-=--=-=
 
@@ -52,13 +52,13 @@ NickServ will send you an email. Follow those instructions to complete the regis
 |port:| 5001|
 |SSL:| yes|
 
-    * Nickname and Login name are the ones you just registered, as well as the server password.
+* Nickname and Login name are the ones you just registered, as well as the server password.
 
-    * Nickserv Password: this only applies if you've registered your Nick with Freenode's NickServ
-        * If you've already registered with NickServ, you should use that to log in.
+* Nickserv Password: this only applies if you've registered your Nick with Freenode's NickServ
+    * If you've already registered with NickServ, you should use that to log in.
 
-    * Some clients require that you change settings via IRC commands:
-        `/server 107.170.134.161 +5001 username:password`
+* Some clients require that you change settings via IRC commands:
+    `/server 107.170.134.161 +5001 username:password`
 The server is using SSL. For some clients, this is indicated by the '+'. You may need to add to the command otherwise.
 
 ### Important Installation notes:
