@@ -6,6 +6,9 @@ App.py houses the Flask app that serves the registration page.  The
 settings for this our housed in a config file and then loaded into the app.
 Client-side configuration is also loaded here and passed using JSON.
 
+    Usage:
+        app.py
+
 """
 
 from flask import Flask

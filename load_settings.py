@@ -2,7 +2,9 @@
 ZNC WEB REGISTRATION APPLICATION
 ---------------------------------
 
-Load Settings Module
+This is the settings module for the application.  After an instance of this
+class is created, it can be used to access any settings that may be in the
+included config file.
 
 """
 
