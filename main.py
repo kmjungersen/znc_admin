@@ -310,10 +310,10 @@ class IRCProtocol(irc.IRCClient):
 
         """
 
-        log_message('IRC - Connection Made!')
-
         irc.IRCClient.connectionMade(self)
         self.factory.the_client = self
+
+        log_message('IRC - Connection Made!')
 
     def signedOn(self):
         """ This function is called when the bot is successfully signed on to
@@ -385,7 +385,6 @@ class IRCFactory(protocol.ClientFactory):
 
         """
 
-        pass
 
     def buildProtocol(self, address):
         """ This function is called when building the reactor, and it builds
