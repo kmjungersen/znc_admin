@@ -15,11 +15,6 @@
 
 }
 
-@font-face {
-    font-family: "Trebuchet MS", "Arial", "Helvetica", "Verdana", "sans-serif";
-    src: url(http://sansation_light.woff);
-}
-
 .homeLink {
     font-size: 1.5em;
     margin-bottom: 20px;
@@ -52,7 +47,7 @@ input.submitButton {
     color: #fafafa;
     font-size: 0.9em;
     position: relative;
-    bottom: 13px;
+    bottom: 0;
 }
 
 div.bottomNotes {
@@ -81,18 +76,5 @@ body{
 	color: #fff;
     font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
 	font-size: 12px;
-    background-image:url('http://www.hadewallpapers.com/wp-content/uploads/2014/04/gradient-background-css-3.jpg');
-}
-
-.body{
-	position: absolute;
-	top: 100px;
-	left: -20px;
-	right: -40px;
-	bottom: -40px;
-	width: auto;
-	height: auto;
-	background-image: url(http://ginva.com/wp-content/uploads/2012/07/city-skyline-wallpapers-008.jpg);
-	background-size: cover;
-	z-index: 0;
+    background-image:url('gradient-background-css-3.jpg');
 }
