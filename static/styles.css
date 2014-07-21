@@ -1,8 +1,10 @@
 .title {
     color: #332f37;
     font-size: 20px;
-    padding-left: 7px;
-    font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
+    padding-left: 0;
+    font-family: "HelveticaNeue-Light";
+    margin-bottom: 5px;
+
 }
 
 .irchome {
@@ -11,6 +13,11 @@
     padding-top: 5px;
     font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
 
+}
+
+@font-face {
+    font-family: "Trebuchet MS", "Arial", "Helvetica", "Verdana", "sans-serif";
+    src: url(http://sansation_light.woff);
 }
 
 .homeLink {
@@ -50,8 +57,8 @@ input.submitButton {
 
 div.bottomNotes {
     color: grey;
-    margin-top: 35px;
-    padding-left: 10px;
+    margin-top: 30px;
+
 }
 
 .singleNote {
@@ -65,6 +72,8 @@ div.bottomNotes {
   width: 350px;
   background-color: black;
   opacity: 0.5;
+
+;
 }
 
 body{
