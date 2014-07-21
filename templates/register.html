@@ -22,29 +22,40 @@
 
         <script src="/static/register.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="/static/styles.css">
-
+        <link rel="stylesheet" type="text/css" href="../static/styles.css">
     </head>
 
-<body>
-    <a href="/"><img src="/static/cos_logo.png" height="60"></a>
 
+    <body >
+
+    <a href="/"><img src="http://centerforopenscience.org/static/img/icons/cos_logo.png" height="100"></a>
+
+    <div class = "title">
     <h1>IRC Registration</h1>
+    </div>
 
+   <div class = "container">
     <form>
         <div id="status" class="errorsList"></div>
 
-        <div>Username/Nick:* <input class="field" type="text" name="username" id="username" value=""></div>
+        <div>
+            <h3> Username/Nick:*</h3>
+            <input class="field" type="text" name="username" id="username" value=""></div>
         <div class="inputReqs">(only letters, numbers, dashes and underscores; between 6 and 16 characters)</div>
 
-        <div>Password:** <input class="field" type="password" name="pwd1" id="pwd1" value=""></div>
+        <div>
+            <h3>Password:** </h3>
+            <input class="field" type="password" name="pwd1" id="pwd1" value=""></div>
         <div class="inputReqs">(only letters and numbers; greater than 6 characters)</div>
 
-        <div>Verify Password: <input class="field" type="password" name="pwd2"  id="pwd2" value=""></div>
+        <div>
+            <h3>Verify Password:</h3>
+            <input class="field" type="password" name="pwd2"  id="pwd2" value=""></div>
 
         <div><input class="submitButton" type="submit" name="submit" value="Submit" id="submit"></div>
-    </form>
 
+    </form>
+    </div>
     <div class="bottomNotes">
 
         <p class="singleNote">* use a name that will be recognizable to others</p>
