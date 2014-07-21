@@ -2,3 +2,5 @@
 *.pyc
 znc_settings.conf
 znc_control_panel_help.txt
+*.ipynb
+.ipynb_checkpoints/
