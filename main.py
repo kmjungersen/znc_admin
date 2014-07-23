@@ -45,7 +45,8 @@ settings = LocalSettings(CONFIG_FILE)
 class UserAdmin():
     """ UserAdmin is an object that can be used by both the SockJS
     and IRC protocols to pass user information and perform actions between
-    the two.  A single instance of this is used and can
+    the two.  A single instance of this is used and can handle all user
+    actions.
 
     """
 
