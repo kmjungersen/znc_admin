@@ -61,6 +61,8 @@ class UserAdmin():
             'set_value': 'set <variable> <username> <value>',
             'clone_user': 'cloneuser <user_to_clone> <username>',
             'change_password': 'set password <username> <password>',
+            'set_network_value':
+                        'setnetwork <variable> <username> <network> <value>',
         }
 
         self.variable_list = [
@@ -157,8 +159,17 @@ class UserAdmin():
 
             send_irc_command(command)
 
+        command = self.render_command('set_network_value',
+                                      variable='altnick',
+                                      username=self.username,
+                                      network='Freenode',
+                                      value=self.username,
+                                      )
+
+        send_irc_command(command)
+
     def render_command(self, operation, username='', password='', variable='',
-                       value=''):
+                       value='', network=''):
         """ This function renders the appropriate command to send to ZNC.  It
         will pull the correct template command from `self.command_dict` based
         on the operation value passed here.  Then it will use any optional
@@ -171,7 +182,7 @@ class UserAdmin():
         :param variable: the ZNC variable to be changed (default = '')
         :param value: the desired value for the ZNC variable being changed
                         (default = '')
-s
+
         :return command: the formatted command, which can then be sent to ZNC
 
         """
@@ -181,6 +192,7 @@ s
             '<password>': password,
             '<variable>': variable,
             '<value>': value,
+            '<network>': network,
         }
 
         command = self.command_dict[operation]
@@ -414,7 +426,6 @@ class IRCFactory(protocol.ClientFactory):
         """ (Class has no attributes)
 
         """
-
 
     def buildProtocol(self, address):
         """ This function is called when building the reactor, and it builds
