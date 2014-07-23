@@ -51,6 +51,7 @@ class UserAdmin():
 
     def __init__(self):
         self.username = ''
+        self.password = ''
         self.success_message = 'User [{}] added!'
         self.failure_message = 'Error: User not added! [User already exists]'
 
@@ -70,7 +71,7 @@ class UserAdmin():
 
         # TODO(kmjungersen) - add support for all commands
 
-    def add_user(self, data):
+    def add_user_from_raw_data(self, data):
         """ This function will start the process of adding a new ZNC user.
         It begins by retrieving a username and password from the socket via
         `parse_user_info()`, and then validates the desired username. If
@@ -97,6 +98,7 @@ class UserAdmin():
         """
 
         self.username = username
+        self.password = password
 
         # Clones User
         command = self.render_command('clone_user',
@@ -106,10 +108,38 @@ class UserAdmin():
 
         send_irc_command(command)
 
+    def finish_creating_user(self, status_message, valid_user):
+        """ This function is called after feedback has been received from IRC
+        on whether or not the new user can be added.  If they can, it will
+        continue to alter their settings (such as username and password).  If
+        not, it will only return the status message to the client.
+
+        :param status_message: the message that will be returned to the client
+        :param valid_user: a Bool describing whether or not the username
+                            is available
+
+        """
+        if valid_user:
+
+            self.alter_user_settings()
+
+        send_client_response(status_message)
+
+        log_message(status_message)
+
+        self.username = ''
+        self.password = ''
+
+    def alter_user_settings(self):
+        """ This function changes the necessary user settings, particularly
+        the password, nick, altnick, ident, and realname.
+
+        """
+
         # Change Password
         command = self.render_command('change_password',
-                                      username=username,
-                                      password=password,
+                                      username=self.username,
+                                      password=self.password,
                                       )
 
         send_irc_command(command)
@@ -118,10 +148,10 @@ class UserAdmin():
         for item in self.variable_list:
 
             command = self.render_command('set_value',
-                                          username=username,
-                                          password=password,
+                                          username=self.username,
+                                          password=self.password,
                                           variable=item,
-                                          value=username,
+                                          value=self.username,
                                           )
 
             send_irc_command(command)
@@ -170,20 +200,19 @@ s
         """
 
         status_message = ''
+        valid_user = False
 
         if feedback == self.success_message.format(self.username):
 
             status_message = 'Success!  ' + feedback
+            valid_user = True
 
         elif feedback == self.failure_message.format(self.username):
 
             status_message = feedback
+            valid_user = False
 
-        send_client_response(status_message)
-
-        log_message(status_message)
-
-        self.username = ''
+        self.finish_creating_user(status_message, valid_user)
 
     @staticmethod
     def parse_user_info(information):
@@ -251,7 +280,7 @@ class SockJSProtocol(Protocol):
 
         raw_data = raw_data.encode('utf-8')
 
-        USER_ACTION.add_user(raw_data)
+        USER_ACTION.add_user_from_raw_data(raw_data)
 
     def connectionLost(self, reason=''):
         """ The function that is called when something severs the connection
