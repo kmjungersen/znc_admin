@@ -72,9 +72,12 @@ div.bottomNotes {
 }
 
 body{
+    background-repeat: no-repeat;
+    background-color: #ffffff;
 	margin: 13px;
 	color: #fff;
     font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial, sans-serif;
 	font-size: 12px;
     background-image:url('gradient-background-css-3.jpg');
+    background-size: cover;
 }
