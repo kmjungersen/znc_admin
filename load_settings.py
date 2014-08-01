@@ -9,6 +9,7 @@ included config file.
 """
 
 from ConfigParser import RawConfigParser
+import os.path
 
 
 class LocalSettings():
@@ -27,6 +28,10 @@ class LocalSettings():
         :param config_file: the path for the config file the user wishes to use
 
         """
+
+        if not os.path.isfile(config_file):
+            raise KeyboardInterrupt('ERROR: A config file does not exist for this application.  '
+                                    'Please create one!')
 
         settings = self.load_settings(config_file)
 
