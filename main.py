@@ -37,9 +37,8 @@ from load_settings import LocalSettings
 # Import Docopt
 from docopt import docopt
 
-# CONFIG_FILE is the file pointer of our configuration file
-CONFIG_FILE = 'znc_settings.conf'
-settings = LocalSettings(CONFIG_FILE)
+# This creates a LocalSettings instance, through which all settings from the config file can be accessed
+settings = LocalSettings()
 
 
 class UserAdmin():

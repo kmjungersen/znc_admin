@@ -18,8 +18,8 @@ from flask import redirect
 
 from load_settings import LocalSettings
 
-CONFIG_FILE = 'znc_settings.conf'
-settings = LocalSettings(CONFIG_FILE)
+# This creates a LocalSettings instance, through which all settings from the config file can be accessed
+settings = LocalSettings()
 
 app = Flask(__name__)
 
