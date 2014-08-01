@@ -30,8 +30,8 @@ class LocalSettings():
         """
 
         if not os.path.isfile(config_file):
-            raise KeyboardInterrupt('ERROR: A config file does not exist for this application.  '
-                                    'Please create one!')
+            raise IOError('ERROR: A config file does not exist for this application.  '
+                          'Please create one!')
 
         settings = self.load_settings(config_file)
 
